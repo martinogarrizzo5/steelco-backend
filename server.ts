@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use("/api", injuryRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ message: "hello" });
+  res.json({ message: "Ciao a tutti belli e brutti, i brutti al rogo :)!" });
 });
 
 // send frontend files from the build only in production mode
