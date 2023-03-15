@@ -3,20 +3,24 @@ import path from "path";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import injuryRoutes from "./routes/injury";
+import factoryRoutes from "./routes/factory";
 import prisma from "./prisma/db_connection";
+import helmet from "helmet";
+import cors from "cors";
+import { errorHandler } from "./controllers/error";
 
 dotenv.config();
 const app = express();
 
 // base middlewares
+app.use(helmet());
+app.use(cors());
 app.use(bodyParser.json());
 
 // api routes
-app.use("/api", injuryRoutes);
-
-app.get("/", (req, res) => {
-  res.json({ message: "Ciao a tutti belli e brutti, i brutti al rogo :)!" });
-});
+app.use("/api", [injuryRoutes, factoryRoutes]);
+// app.use("/auth", authRoutes);
+app.use(errorHandler);
 
 // send frontend files from the build only in production mode
 if (process.env.NODE_ENV === "production") {
