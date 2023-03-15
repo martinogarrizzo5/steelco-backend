@@ -11,7 +11,8 @@
     "dev": "concurrently \"npm run server\" \"npm run client\" ",
     "build": "npm run buildServer && npm run buildClient",
     "start": "node ./build/server.js",
-    "install-dev": "npm install --dev-dependencies && cd client && npm install --dev-dependencies"
+    "install-dev": "npm install --dev-dependencies && cd client && npm install --dev-dependencies",
+    "show-db": "prisma studio"
   },
   "author": "",
   "license": "ISC",
