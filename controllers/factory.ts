@@ -6,6 +6,16 @@ export const getFactories: RequestHandler = async (req, res) => {
   return res.json(data);
 };
 
+export const getFactoryById: RequestHandler = async (req, res) => {
+  const factoryId = req.body.id;
+
+  const factory = await prisma.factory.findUnique({
+    where: { id: factoryId },
+    include: { _count: { select: { injuries: true } } },
+  });
+  return res.json(factory);
+};
+
 export const addFactory: RequestHandler = async (req, res) => {
   const factoryAddress = req.body.address;
   const factoryName = req.body.name;
