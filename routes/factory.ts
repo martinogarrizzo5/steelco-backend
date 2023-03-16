@@ -3,10 +3,9 @@ import * as factoryController from "../controllers/factory";
 
 const router = Router();
 
-// CRUD operations
 router.get("/factory", factoryController.getFactories);
 router.get("/factory/:id", factoryController.getFactoryById);
-router.post("/factory", factoryController.addFactory);
+router.post("/factory", factoryController.createFactory);
 router.put("/factory/:id", factoryController.updateFactory);
 router.delete("/factory/:id", factoryController.deleteFactory);
 

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import prisma from "../prisma/db_connection";
-import * as validations from "../validations/factory";
+import * as validation from "../validation/factory";
 
 export const getFactories: RequestHandler = async (req, res) => {
   const data = await prisma.factory.findMany({ orderBy: { name: "asc" } });
@@ -8,7 +8,7 @@ export const getFactories: RequestHandler = async (req, res) => {
 };
 
 export const getFactoryById: RequestHandler = async (req, res) => {
-  const result = validations.getFactoryId.safeParse(req.params);
+  const result = validation.getByIdParams.safeParse(req.params);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
@@ -22,8 +22,8 @@ export const getFactoryById: RequestHandler = async (req, res) => {
   return res.json(factory);
 };
 
-export const addFactory: RequestHandler = async (req, res) => {
-  const result = validations.getFactoryData.safeParse(req.body);
+export const createFactory: RequestHandler = async (req, res) => {
+  const result = validation.postBody.safeParse(req.body);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
@@ -40,17 +40,18 @@ export const addFactory: RequestHandler = async (req, res) => {
 };
 
 export const updateFactory: RequestHandler = async (req, res) => {
-  const result = validations.getFactoryData.safeParse(req.body);
+  const bodyResult = validation.putBody.safeParse(req.body);
+  const paramsResult = validation.putParams.safeParse(req.params);
 
-  if (!result.success) {
+  if (!bodyResult.success || !paramsResult.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
 
-  const { address, name } = result.data;
-  const factoryId = req.params.id;
+  const { address, name } = bodyResult.data;
+  const { id } = paramsResult.data;
 
   await prisma.factory.update({
-    where: { id: +factoryId },
+    where: { id: id },
     data: { address: address, name: name },
   });
 
@@ -58,14 +59,14 @@ export const updateFactory: RequestHandler = async (req, res) => {
 };
 
 export const deleteFactory: RequestHandler = async (req, res) => {
-  const result = validations.getFactoryId.safeParse(req.params);
+  const result = validation.deleteParams.safeParse(req.params);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
 
   const { id } = result.data;
 
-  const factory = await prisma.factory.delete({
+  await prisma.factory.delete({
     where: { id: id },
   });
 

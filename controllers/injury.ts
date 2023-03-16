@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import prisma from "../prisma/db_connection";
-import * as validations from "../validations/injurie";
+import * as validation from "../validation/injury";
 
 export const getInjuries: RequestHandler = async (req, res) => {
   const injuries = await prisma.injury.findMany({ orderBy: { date: "asc" } });
@@ -8,19 +8,23 @@ export const getInjuries: RequestHandler = async (req, res) => {
 };
 
 export const getInjurieById: RequestHandler = async (req, res) => {
-  const result = validations.getInjurieId.safeParse(req.params);
+  const result = validation.getByIdParams.safeParse(req.params);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
 
   const { id } = result.data;
 
-  const injurie = await prisma.injury.findUnique({ where: { id: +id } });
+  const injurie = await prisma.injury.findUnique({ where: { id: id } });
+  if (!injurie) {
+    return res.status(404).json({ message: "Infortunio non trovato" });
+  }
+
   return res.json(injurie);
 };
 
 export const addInjurie: RequestHandler = async (req, res) => {
-  const result = validations.getSomeInjurieData.safeParse(req.body);
+  const result = validation.postBody.safeParse(req.body);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
@@ -29,7 +33,7 @@ export const addInjurie: RequestHandler = async (req, res) => {
 
   await prisma.injury.create({
     data: {
-      date: new Date(date),
+      date: date,
       description: description,
       factoryId: factoryId,
     },
@@ -39,18 +43,20 @@ export const addInjurie: RequestHandler = async (req, res) => {
 };
 
 export const updateInjurie: RequestHandler = async (req, res) => {
-  const result = validations.getSomeInjurieData.safeParse(req.body);
-  if (!result.success) {
+  const bodyResult = validation.putBody.safeParse(req.body);
+  const paramsResult = validation.putParams.safeParse(req.params);
+
+  if (!bodyResult.success || !paramsResult.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
 
-  const { date, description, factoryId } = result.data;
-  const id = req.params.id;
+  const { date, description, factoryId } = bodyResult.data;
+  const { id } = paramsResult.data;
 
   await prisma.injury.update({
-    where: { id: +id },
+    where: { id: id },
     data: {
-      date: new Date(date),
+      date: date,
       description: description,
       factoryId: factoryId,
     },
@@ -60,14 +66,14 @@ export const updateInjurie: RequestHandler = async (req, res) => {
 };
 
 export const deleteInjurie: RequestHandler = async (req, res) => {
-  const result = validations.getInjurieId.safeParse(req.params);
+  const result = validation.deleteParams.safeParse(req.params);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
 
   const { id } = result.data;
 
-  await prisma.injury.delete({ where: { id: +id } });
+  await prisma.injury.delete({ where: { id: id } });
 
   return res.json({ message: "Infortunio eliminato con successo" });
 };
