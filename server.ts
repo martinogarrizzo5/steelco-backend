@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import injuryRoutes from "./routes/injury";
 import factoryRoutes from "./routes/factory";
+import reportRoutes from "./routes/report";
 import prisma from "./prisma/db_connection";
 import helmet from "helmet";
 import cors from "cors";
@@ -18,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // api routes
-app.use("/api", [injuryRoutes, factoryRoutes]);
+app.use("/api", [injuryRoutes, factoryRoutes, reportRoutes]);
 // app.use("/auth", authRoutes);
 app.use(errorHandler);
 
