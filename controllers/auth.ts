@@ -31,7 +31,7 @@ export const login = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const getUser: RequestHandler = async (req, res) => {
+export const getUser: RequestHandler = asyncHandler(async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "Nessun utente loggato" });
   }
@@ -44,4 +44,4 @@ export const getUser: RequestHandler = async (req, res) => {
       username: user.username,
     },
   });
-};
+});

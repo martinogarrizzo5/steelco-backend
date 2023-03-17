@@ -1,11 +1,12 @@
 import { RequestHandler } from "express";
 import prisma from "../prisma/db_connection";
+import asyncHandler from "../middlewares/asyncHandler";
 
 /* 
   return a list with all factories and the date of the last
   injury on each of them
 */
-export const getReport: RequestHandler = async (req, res) => {
+export const getReport: RequestHandler = asyncHandler(async (req, res) => {
   const factoriesWithLastInjury = await prisma.factory.findMany({
     include: {
       injuries: {
@@ -23,6 +24,7 @@ export const getReport: RequestHandler = async (req, res) => {
   }));
 
   res.json(formattedData);
-};
+});
 
+//dato un id di uno stabilimento ottenere il numero di infortuni di ogni mese
 export const getFactoryHistory: RequestHandler = async (req, res) => {};

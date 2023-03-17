@@ -1,13 +1,14 @@
 import { RequestHandler } from "express";
+import asyncHandler from "../middlewares/asyncHandler";
 import prisma from "../prisma/db_connection";
 import * as validation from "../validation/factory";
 
-export const getFactories: RequestHandler = async (req, res) => {
+export const getFactories: RequestHandler = asyncHandler(async (req, res) => {
   const data = await prisma.factory.findMany({ orderBy: { name: "asc" } });
   return res.json(data);
-};
+});
 
-export const getFactoryById: RequestHandler = async (req, res) => {
+export const getFactoryById: RequestHandler = asyncHandler(async (req, res) => {
   const result = validation.getByIdParams.safeParse(req.params);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
@@ -20,9 +21,9 @@ export const getFactoryById: RequestHandler = async (req, res) => {
     include: { _count: { select: { injuries: true } } },
   });
   return res.json(factory);
-};
+});
 
-export const createFactory: RequestHandler = async (req, res) => {
+export const createFactory: RequestHandler = asyncHandler(async (req, res) => {
   const result = validation.postBody.safeParse(req.body);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
@@ -37,9 +38,9 @@ export const createFactory: RequestHandler = async (req, res) => {
   return res
     .status(201)
     .json({ message: "Stabilimento aggiunto con successo" });
-};
+});
 
-export const updateFactory: RequestHandler = async (req, res) => {
+export const updateFactory: RequestHandler = asyncHandler(async (req, res) => {
   const bodyResult = validation.putBody.safeParse(req.body);
   const paramsResult = validation.putParams.safeParse(req.params);
 
@@ -56,9 +57,9 @@ export const updateFactory: RequestHandler = async (req, res) => {
   });
 
   return res.json({ message: "Stabilimento aggiornato con successo" });
-};
+});
 
-export const deleteFactory: RequestHandler = async (req, res) => {
+export const deleteFactory: RequestHandler = asyncHandler(async (req, res) => {
   const result = validation.deleteParams.safeParse(req.params);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
@@ -71,4 +72,4 @@ export const deleteFactory: RequestHandler = async (req, res) => {
   });
 
   return res.json({ message: "Stabilimento eliminato con successo" });
-};
+});
