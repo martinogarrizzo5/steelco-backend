@@ -6,6 +6,10 @@
     "outDir": "./build",
     "esModuleInterop": true,
     "strict": true,
+    "typeRoots": [
+      "@types",
+      "./node_modules/@types",
+    ]   
   },
-  "exclude": ["./client"]
+  "exclude": ["./client"],
 }
