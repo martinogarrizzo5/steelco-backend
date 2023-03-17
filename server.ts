@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import injuryRoutes from "./routes/injury";
 import factoryRoutes from "./routes/factory";
+import reportRoutes from "./routes/report";
 import authRoutes from "./routes/auth";
 import prisma from "./prisma/db_connection";
 import helmet from "helmet";
@@ -19,8 +20,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // api routes
-app.use("/api", [injuryRoutes, factoryRoutes]);
 app.use("/auth", authRoutes);
+app.use("/api", [injuryRoutes, factoryRoutes, reportRoutes]);
 app.use(errorHandler);
 
 // send frontend files from the build only in production mode
