@@ -5,6 +5,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { TbReportAnalytics } from "react-icons/tb";
 import logo from "../assets/logo.png";
 import ErrorIndicator from "../components/ErrorIndicator";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 interface FactoryWithLastInjury extends Factory {
   lastInjuryDate: string;
@@ -32,7 +33,7 @@ function FactoriesScreen() {
   const factoriesList = () => {
     if (error) return <ErrorIndicator message={error} />;
 
-    if (!factories) return <div>Loading...</div>;
+    if (!factories) return <LoadingIndicator />;
 
     return factories.map(factory => (
       <div
