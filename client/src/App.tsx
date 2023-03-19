@@ -9,10 +9,13 @@ import {
 } from "react-router-dom";
 import SnackBar from "./components/SnackBar";
 import FactoriesScreen from "./pages/Factories";
+import InjuriesScreen from "./pages/Injuries"
+import CreateFactoryScreen from "./pages/CreateFactory";
 import Loading from "./pages/Loading";
 import LoginScreen from "./pages/Login";
 import { useAuth } from "./store/authStore";
 import { useSnackBar } from "./store/snackBarStore";
+
 
 function App() {
   const auth = useAuth();
@@ -45,6 +48,7 @@ function App() {
       <Routes>
         <Route path="/app/*" element={<Outlet />}>
           <Route path="factory" element={<FactoriesScreen />} />
+          <Route path="injury" element={<InjuriesScreen />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />
         <Route path="*" element={<Navigate to="/app/factory" />} />
