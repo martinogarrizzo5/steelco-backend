@@ -1,7 +1,13 @@
 import React from "react";
 
-function ErrorIndicator() {
-  return <div>Si è verificato un errore</div>;
+interface ErrorIndicatorProps {
+  message?: string;
+}
+
+function ErrorIndicator(props: ErrorIndicatorProps) {
+  const defaultErrorMessage = "Si è verificato un errore";
+
+  return <div>{props.message ? props.message : defaultErrorMessage}</div>;
 }
 
 export default ErrorIndicator;

@@ -8,6 +8,7 @@ import asyncHandler from "../middlewares/asyncHandler";
 */
 export const getReport: RequestHandler = asyncHandler(async (req, res) => {
   const factoriesWithLastInjury = await prisma.factory.findMany({
+    orderBy: { name: "asc" },
     include: {
       injuries: {
         orderBy: { date: "asc" },
@@ -16,7 +17,7 @@ export const getReport: RequestHandler = asyncHandler(async (req, res) => {
     },
   });
 
-  const formattedData = factoriesWithLastInjury.map((factory) => ({
+  const formattedData = factoriesWithLastInjury.map(factory => ({
     id: factory.id,
     name: factory.name,
     address: factory.address,

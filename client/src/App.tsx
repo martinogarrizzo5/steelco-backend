@@ -34,7 +34,7 @@ function App() {
 
     // redirect to dashboard if user is logged in
     if (path === "/" || path === "/login" || path === "/app") {
-      return navigate("/app", { replace: true });
+      return navigate("/app/factory", { replace: true });
     }
   }, [auth]);
 
@@ -44,10 +44,10 @@ function App() {
     <>
       <Routes>
         <Route path="/app/*" element={<Outlet />}>
-          <Route path="" element={<FactoriesScreen />} />
+          <Route path="factory" element={<FactoriesScreen />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />
-        <Route path="*" element={<Navigate to="/app/factories" />} />
+        <Route path="*" element={<Navigate to="/app/factory" />} />
       </Routes>
       {snackBar.isShown && <SnackBar />}
     </>
