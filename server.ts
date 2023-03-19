@@ -10,6 +10,7 @@ import prisma from "./prisma/db_connection";
 import helmet from "helmet";
 import cors from "cors";
 import errorHandler from "./middlewares/errorHandler";
+import morgan from "morgan";
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,7 @@ const app = express();
 // base middlewares
 app.use(helmet());
 app.use(cors());
+app.use(morgan(process.env.NODE_ENV === "production" ? "common" : "dev"));
 app.use(bodyParser.json());
 
 // api routes
