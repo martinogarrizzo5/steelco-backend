@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { sqlId } from "../utils/zod";
 
+export const getAllQuery = z.object({
+  factoryId: z.coerce.number().optional(),
+});
+
 export const getByIdParams = z.object({
   id: sqlId,
 });
