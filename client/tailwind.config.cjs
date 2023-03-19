@@ -5,11 +5,13 @@ module.exports = {
     extend: {
       colors: {
         primary: "#243572",
-        primaryDark: "#1E2A5F",
-        primaryDarker: "#1A234F",
+        primaryDark: "#15255E",
+        primaryDarker: "#050E2B",
         input: "#EFEFF8",
         grayBorder: "#C7C7C7",
-        tileHover: "#F7F7FA",
+        tile: "#F7F7FA",
+        tileHover: "#EFEFF8",
+        tileActive: "#E8E8F3",
       },
     },
   },

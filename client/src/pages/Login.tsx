@@ -68,7 +68,7 @@ function LoginScreen() {
               formRegister={register("password")}
             />
           </div>
-          <button type="submit" className="btn">
+          <button type="submit" className="btn w-full">
             {formState.isSubmitting ? (
               <ClipLoader size={24} color="white" />
             ) : (
