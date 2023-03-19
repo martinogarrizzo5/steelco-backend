@@ -12,7 +12,7 @@ export const getReport: RequestHandler = asyncHandler(async (req, res) => {
     orderBy: { name: "asc" },
     include: {
       injuries: {
-        orderBy: { date: "asc" },
+        orderBy: { date: "desc" },
         take: 1,
       },
     },
