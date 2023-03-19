@@ -7,7 +7,7 @@ import prisma from "../prisma/db_connection";
 export const login = asyncHandler(async (req, res, next) => {
   const result = validation.loginBody.safeParse(req.body);
   if (!result.success) {
-    return res.status(400).json({ message: "Parametri invalidi" });
+    return res.status(400).json({ message: "Parametri invalidi o mancanti" });
   }
 
   const { username, password } = result.data;

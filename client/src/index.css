@@ -25,16 +25,23 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
-
 @layer components {
-
 }
 
 @layer utilities {
-.title {
-    
-}
-.label {
- 
-}
+  .title {
+    @apply text-2xl font-semibold text-primary;
+  }
+  .label {
+    @apply mb-2 font-medium text-primary text-sm;
+  }
+
+  .input {
+    @apply bg-input py-3 px-4 text-base rounded-md;
+  }
+
+  .btn {
+    @apply px-4 py-3 bg-primary w-full text-white rounded-md flex items-center justify-center 
+    hover:bg-primaryDark active:bg-primaryDarker;
+  }
 }

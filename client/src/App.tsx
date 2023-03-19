@@ -7,15 +7,18 @@ import {
   Outlet,
   Navigate,
 } from "react-router-dom";
+import SnackBar from "./components/SnackBar";
 import FactoriesScreen from "./pages/Factories";
 import Loading from "./pages/Loading";
 import LoginScreen from "./pages/Login";
 import { useAuth } from "./store/authStore";
+import { useSnackBar } from "./store/snackBarStore";
 
 function App() {
   const auth = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const snackBar = useSnackBar();
 
   useEffect(() => {
     auth.fetchUser();
@@ -38,13 +41,16 @@ function App() {
   if (auth.isUserLoading) return <Loading />;
 
   return (
-    <Routes>
-      <Route path="/app/*" element={<Outlet />}>
-        <Route path="" element={<FactoriesScreen />} />
-      </Route>
-      <Route path="/login" element={<LoginScreen />} />
-      <Route path="*" element={<Navigate to="/app/factories" />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/app/*" element={<Outlet />}>
+          <Route path="" element={<FactoriesScreen />} />
+        </Route>
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path="*" element={<Navigate to="/app/factories" />} />
+      </Routes>
+      {snackBar.isShown && <SnackBar />}
+    </>
   );
 }
 

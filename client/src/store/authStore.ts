@@ -1,6 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 import { AxiosError } from "axios";
+import { SnackBarType, useSnackBar as snackBarStore } from "./snackBarStore";
 
 interface IUser {
   id: number;
@@ -21,11 +22,7 @@ interface IAuth {
   logout: () => void;
 }
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export const useAuth = create<IAuth>()((set) => ({
+export const useAuth = create<IAuth>()(set => ({
   user: null,
   isUserLoading: true,
   isLogging: false,
@@ -54,7 +51,7 @@ export const useAuth = create<IAuth>()((set) => ({
     set({ isLogging: true });
     // api request
     try {
-      const response = await axios.post("/login", { username, password });
+      const response = await axios.post("/auth/login", { username, password });
       const token = response.data.token;
       const user = response.data.user;
 
@@ -63,7 +60,10 @@ export const useAuth = create<IAuth>()((set) => ({
       if (saveCredentials) localStorage.setItem("token", token);
     } catch (err) {
       const error = err as AxiosError;
+      const responseData = error.response?.data as any;
+
       set({ isLogging: false, user: null });
+      snackBarStore.getState().show(responseData.message, SnackBarType.error);
     }
   },
 
