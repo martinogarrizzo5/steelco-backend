@@ -11,7 +11,7 @@ import {
 } from "react-icons/ai";
 import Input from "../components/Input";
 
-interface FormData {
+interface LoginFormData {
   username: string;
   password: string;
 }
@@ -20,9 +20,9 @@ function LoginScreen() {
   const auth = useAuth();
   const [isPasswordShown, setPasswordShown] = useState(false);
 
-  const { register, handleSubmit, formState } = useForm<FormData>();
+  const { register, handleSubmit, formState } = useForm<LoginFormData>();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     console.log(data);
     await auth.login(data.username, data.password, true);
   };

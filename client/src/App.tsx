@@ -8,8 +8,11 @@ import {
   Navigate,
 } from "react-router-dom";
 import SnackBar from "./components/SnackBar";
+import AppLayout from "./layout/AppLayout";
+import AddFactory from "./pages/AddFactory";
+import EditFactory from "./pages/EditFactory";
 import FactoriesScreen from "./pages/Factories";
-import Loading from "./pages/Loading";
+import InitialLoading from "./pages/InitialLoading";
 import LoginScreen from "./pages/Login";
 import { useAuth } from "./store/authStore";
 import { useSnackBar } from "./store/snackBarStore";
@@ -38,13 +41,16 @@ function App() {
     }
   }, [auth]);
 
-  if (auth.isUserLoading) return <Loading />;
+  if (auth.isUserLoading) return <InitialLoading />;
 
   return (
     <>
       <Routes>
-        <Route path="/app/*" element={<Outlet />}>
+        <Route path="/app/*" element={<AppLayout />}>
           <Route path="factory" element={<FactoriesScreen />} />
+          <Route path="factory/add" element={<AddFactory />} />
+          <Route path="factory/:id" element={<EditFactory />} />
+          <Route path="*" element={<Navigate to="/app/factory" />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />
         <Route path="*" element={<Navigate to="/app/factory" />} />

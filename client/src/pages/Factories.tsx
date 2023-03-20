@@ -1,11 +1,13 @@
 import React from "react";
 import axios, { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 import { Factory } from "@prisma/client";
 import { IoIosArrowForward, IoMdAdd } from "react-icons/io";
 import { TbReportAnalytics } from "react-icons/tb";
 import logo from "../assets/logo.png";
 import ErrorIndicator from "../components/ErrorIndicator";
 import LoadingIndicator from "../components/LoadingIndicator";
+import { getFormattedDate } from "../utils/format";
 
 interface FactoryWithLastInjury extends Factory {
   lastInjuryDate: string;
@@ -14,6 +16,7 @@ interface FactoryWithLastInjury extends Factory {
 function FactoriesScreen() {
   const [factories, setFactories] = React.useState<FactoryWithLastInjury[]>();
   const [error, setError] = React.useState<string>();
+  const navigate = useNavigate();
 
   const fetchFactories = async () => {
     try {
@@ -33,7 +36,7 @@ function FactoriesScreen() {
   const factoriesList = () => {
     if (error) return <ErrorIndicator message={error} />;
 
-    if (!factories) return <LoadingIndicator />;
+    if (!factories) return <LoadingIndicator className="mt-32 mx-auto" />;
 
     return factories.map(factory => (
       <div
@@ -45,11 +48,12 @@ function FactoriesScreen() {
             {factory.name}
           </h2>
           <p className="text-sm sm:text-base">{factory.address}</p>
+
           <p className="text-sm sm:text-base">
             Ultimo Infortunio:{" "}
-            {new Date(factory.lastInjuryDate).toLocaleDateString("it-IT", {
-              dateStyle: "long",
-            })}
+            {factory.lastInjuryDate
+              ? getFormattedDate(factory.lastInjuryDate)
+              : "Nessuno"}
           </p>
         </div>
         <IoIosArrowForward className="text-2xl" />
@@ -58,25 +62,18 @@ function FactoriesScreen() {
   };
 
   return (
-    <main>
-      <div className="max-w-4xl mx-auto mb-4">
-        <img
-          src={logo}
-          alt="logo"
-          className="h-10 sm:h-14 mx-auto mt-3 mb-6 sm:mb-8"
-        />
-        <div className="flex items-center justify-between px-6 mb-2">
-          <h1 className="title">Gestione Infortuni</h1>
-          <button className="btn !rounded-full w-10 h-10 !p-0 sm:hidden">
-            <IoMdAdd className="text-2xl" />
-          </button>
-          <button className="btn !hidden sm:!flex">
-            <IoMdAdd className="text-2xl mr-2" />
-            <span>Nuovo Stabilimento</span>
-          </button>
-        </div>
-        <div className="flex flex-col px-6 py-4 gap-4">{factoriesList()}</div>
+    <main className="max-w-4xl mx-auto mb-4 px-6">
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="title">Gestione Infortuni</h1>
+        <button
+          className="btn !rounded-full w-10 h-10 !p-0 sm:h-auto sm:w-auto sm:!px-4 sm:!py-3 sm:!rounded-md"
+          onClick={() => navigate("/app/factory/add")}
+        >
+          <IoMdAdd className="text-2xl sm:mr-2" />
+          <span className="hidden sm:block">Nuovo Stabilimento</span>
+        </button>
       </div>
+      <div className="flex flex-col py-4 gap-4">{factoriesList()}</div>
     </main>
   );
 }

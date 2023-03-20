@@ -5,7 +5,7 @@ export enum SnackBarType {
   success = "success",
 }
 
-interface ISnackBar {
+export interface ISnackBar {
   isShown: boolean;
   type: SnackBarType | null;
   message: string | null;

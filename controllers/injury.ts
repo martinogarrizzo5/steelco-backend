@@ -3,7 +3,6 @@ import prisma from "../prisma/db_connection";
 import * as validation from "../validation/injury";
 import asyncHandler from "../middlewares/asyncHandler";
 
-//injury?factoryId=2
 export const getInjuries: RequestHandler = asyncHandler(async (req, res) => {
   const result = validation.getAllQuery.safeParse(req.query);
 
@@ -11,7 +10,7 @@ export const getInjuries: RequestHandler = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
 
-  const { factoryId /*data*/ } = result.data;
+  const { factoryId } = result.data;
 
   const injuries = await prisma.injury.findMany({
     orderBy: { date: "asc" },

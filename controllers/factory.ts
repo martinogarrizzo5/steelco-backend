@@ -20,6 +20,10 @@ export const getFactoryById: RequestHandler = asyncHandler(async (req, res) => {
     where: { id: id },
     include: { _count: { select: { injuries: true } } },
   });
+  if (!factory) {
+    return res.status(404).json({ message: "Stabilimento non trovato" });
+  }
+
   return res.json(factory);
 });
 

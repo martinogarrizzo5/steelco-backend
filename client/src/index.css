@@ -25,6 +25,12 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
+@layer base {
+  :root {
+    --primaryColor: theme("colors.primary");
+  }
+}
+
 @layer components {
 }
 
@@ -37,7 +43,7 @@ body {
   }
 
   .input {
-    @apply bg-input py-3 px-4 text-base rounded-md;
+    @apply bg-input text-base rounded-md;
   }
 
   .btn {

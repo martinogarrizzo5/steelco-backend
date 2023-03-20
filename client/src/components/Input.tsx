@@ -7,7 +7,7 @@ interface InputProps {
   type: string;
   onClick?: () => void;
   trailing?: React.ReactNode;
-  formRegister: UseFormRegisterReturn;
+  formRegister?: UseFormRegisterReturn;
   placeholder?: string;
 }
 
@@ -21,7 +21,7 @@ function Input(props: InputProps) {
     >
       <input
         type={props.type}
-        className="w-full"
+        className="w-full py-3 px-4"
         placeholder={props.placeholder}
         {...props.formRegister}
         name={props.name}
