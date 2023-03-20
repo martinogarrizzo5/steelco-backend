@@ -4,7 +4,6 @@ import {
   Routes,
   useNavigate,
   useLocation,
-  Outlet,
   Navigate,
 } from "react-router-dom";
 import SnackBar from "./components/SnackBar";
@@ -13,6 +12,7 @@ import AddFactory from "./pages/AddFactory";
 import EditFactory from "./pages/EditFactory";
 import FactoriesScreen from "./pages/Factories";
 import InitialLoading from "./pages/InitialLoading";
+import InjuriesScreen from "./pages/Injuries";
 import LoginScreen from "./pages/Login";
 import { useAuth } from "./store/authStore";
 import { useSnackBar } from "./store/snackBarStore";
@@ -51,6 +51,7 @@ function App() {
           <Route path="factory/add" element={<AddFactory />} />
           <Route path="factory/:id" element={<EditFactory />} />
           <Route path="*" element={<Navigate to="/app/factory" />} />
+          <Route path="injury" element={<InjuriesScreen />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />
         <Route path="*" element={<Navigate to="/app/factory" />} />
