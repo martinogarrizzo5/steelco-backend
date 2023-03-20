@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { MdSmartScreen } from "react-icons/md";
 import {
   Route,
   Routes,
@@ -50,8 +51,8 @@ function App() {
           <Route path="factory" element={<FactoriesScreen />} />
           <Route path="factory/add" element={<AddFactory />} />
           <Route path="factory/:id" element={<EditFactory />} />
+          <Route path="factory/:id/report" element={<InjuriesScreen />} />
           <Route path="*" element={<Navigate to="/app/factory" />} />
-          <Route path="injury" element={<InjuriesScreen />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />
         <Route path="*" element={<Navigate to="/app/factory" />} />

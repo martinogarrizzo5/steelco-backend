@@ -2,7 +2,7 @@ import React from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { Factory } from "@prisma/client";
-import { IoIosArrowForward, IoMdAdd } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowDropdown, IoIosArrowForward, IoIosDocument, IoIosInformation, IoIosInformationCircle, IoIosPaper, IoIosTrash, IoMdAdd } from "react-icons/io";
 import { TbReportAnalytics } from "react-icons/tb";
 import logo from "../assets/logo.png";
 import ErrorIndicator from "../components/ErrorIndicator";
@@ -56,7 +56,10 @@ function FactoriesScreen() {
               : "Nessuno"}
           </p>
         </div>
-        <IoIosArrowForward className="text-2xl" />
+       <div className="flex items-center justify-around pr-6 px-7 py-4 space-x-12">
+       <IoIosPaper className="text-2xl" onClick={() => navigate(`/app/factory/${factory.id}`)}/> 
+       <IoIosArrowDown className="text-2xl " onClick={() => navigate(`/app/factory/${factory.id}/report`)}/>
+        </div> 
       </div>
     ));
   };
