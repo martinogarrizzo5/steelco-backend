@@ -2,7 +2,17 @@ import React from "react";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { Factory } from "@prisma/client";
-import { IoIosArrowDown, IoIosArrowDropdown, IoIosArrowForward, IoIosDocument, IoIosInformation, IoIosInformationCircle, IoIosPaper, IoIosTrash, IoMdAdd } from "react-icons/io";
+import {
+  IoIosArrowDown,
+  IoIosArrowDropdown,
+  IoIosArrowForward,
+  IoIosDocument,
+  IoIosInformation,
+  IoIosInformationCircle,
+  IoIosPaper,
+  IoIosTrash,
+  IoMdAdd,
+} from "react-icons/io";
 import { TbReportAnalytics } from "react-icons/tb";
 import logo from "../assets/logo.png";
 import ErrorIndicator from "../components/ErrorIndicator";
@@ -38,10 +48,11 @@ function FactoriesScreen() {
 
     if (!factories) return <LoadingIndicator className="mt-32 mx-auto" />;
 
-    return factories.map(factory => (
+    return factories.map((factory) => (
       <div
         key={`factory-${factory.id}`}
         className="flex items-center justify-between px-6 py-4 border-[1px] bg-tile hover:bg-tileHover active:bg-tileActive cursor-pointer"
+        onClick={() => navigate(`/app/factory/${factory.id}/report`)}
       >
         <div>
           <h2 className="sm:text-lg font-semibold text-primary mb-1">
@@ -56,10 +67,7 @@ function FactoriesScreen() {
               : "Nessuno"}
           </p>
         </div>
-       <div className="flex items-center justify-around pr-6 px-7 py-4 space-x-12">
-       <IoIosPaper className="text-2xl" onClick={() => navigate(`/app/factory/${factory.id}`)}/> 
-       <IoIosArrowDown className="text-2xl " onClick={() => navigate(`/app/factory/${factory.id}/report`)}/>
-        </div> 
+        <IoIosArrowForward className="text-2xl " />
       </div>
     ));
   };
