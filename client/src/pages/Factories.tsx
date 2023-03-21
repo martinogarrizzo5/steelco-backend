@@ -58,7 +58,7 @@ function FactoriesScreen() {
         </div>
        <div className="flex items-center justify-around pr-6 px-7 py-4 space-x-12">
        <IoIosPaper className="text-2xl" onClick={() => navigate(`/app/factory/${factory.id}`)}/> 
-       <IoIosArrowDown className="text-2xl " onClick={() => navigate(`/app/factory/${factory.id}/report`)}/>
+       <IoIosArrowForward className="text-2xl " onClick={() => navigate(`/app/factory/${factory.id}/report`)}/>
         </div> 
       </div>
     ));
