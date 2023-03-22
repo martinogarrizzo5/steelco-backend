@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { IoMdCheckmark } from "react-icons/io";
+import { TfiTrash } from "react-icons/tfi"
 import ClipLoader from "react-spinners/ClipLoader";
 import Input from "./Input";
 
@@ -52,7 +53,13 @@ function FactoryForm(props: FactoryFormProps) {
           formRegister={register("address")}
         />
       </div>
-      <button type="submit" className="btn">
+      
+      <div className="flex items-center">
+      <button className="btn flex-1 mr-8 !bg-red-600" type="submit">
+        <TfiTrash className="text-2xl mr-3" />
+        <span className="">Elimina</span>
+      </button>
+      <button type="submit" className="btn flex-1">
         {formState.isSubmitting ? (
           <ClipLoader size={24} color="white" />
         ) : (
@@ -62,6 +69,7 @@ function FactoryForm(props: FactoryFormProps) {
           </>
         )}
       </button>
+      </div>
     </form>
   );
 }

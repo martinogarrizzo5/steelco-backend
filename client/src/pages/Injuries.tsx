@@ -5,6 +5,7 @@ import { AxisOptions, Chart } from "react-charts";
 import PageTitle from "../components/PageTitle";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoMdAdd } from "react-icons/io";
+import { MdEditNote } from "react-icons/md";
 import LoadingIndicator from "../components/LoadingIndicator";
 
 type MonthlyInjuries = {
@@ -90,7 +91,7 @@ function InjuriesScreen() {
   return (
     <main className="max-w-4xl mx-auto mb-4 px-6">
       <div className="flex items-center justify-between mb-2 ">
-        <PageTitle title={factory?.name} canGoBack />
+        <PageTitle title={factory?.name} canGoBack trailing={<MdEditNote className="text-4xl sm:mr-2 text-primary cursor-pointer" onClick={() => navigate(`/app/factory/${id}`)}/>}/>
       </div>
       <div className="w-full h-40 px-15 py-0 border-[2px] ">
         {series && (

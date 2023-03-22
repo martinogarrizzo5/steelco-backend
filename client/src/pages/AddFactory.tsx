@@ -29,4 +29,4 @@ function AddFactory() {
   );
 }
 
-export default AddFactory;
+export default AddFactory
