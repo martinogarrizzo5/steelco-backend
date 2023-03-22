@@ -5,6 +5,7 @@ import { AxisOptions, Chart } from "react-charts";
 import PageTitle from "../components/PageTitle";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoMdAdd } from "react-icons/io";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 type MonthlyInjuries = {
   date: Date;
@@ -12,13 +13,14 @@ type MonthlyInjuries = {
 };
 
 type Series = {
+  label: string;
   data: MonthlyInjuries[];
 };
 
 function InjuriesScreen() {
   const { id } = useParams();
   const [factory, setFactory] = React.useState<Factory>();
-  const [series, setSeries] = React.useState();
+  const [series, setSeries] = React.useState<Series[]>();
   const [report, setReport] = React.useState();
   const [error, setError] = React.useState<string>();
   const navigate = useNavigate();
@@ -45,7 +47,14 @@ function InjuriesScreen() {
 
   const fetchInjuriesData = async () => {
     try {
-      const response = await axios.get(`/api/report/${id}`);
+      const response = await axios.get<MonthlyFactoryReport[]>(
+        `/api/report/${id}`
+      );
+      const data = response.data.map((el) => ({
+        date: new Date(el.date),
+        count: el.count,
+      }));
+      setSeries([{ label: "Factory report", data: data }]);
     } catch (err) {
       const error = err as AxiosError;
       if (error.response?.status === 404) {
@@ -74,20 +83,14 @@ function InjuriesScreen() {
     []
   );
 
+  if (!factory || !series) {
+    return <LoadingIndicator className="mx-auto w-max my-24" />;
+  }
+
   return (
     <main className="max-w-4xl mx-auto mb-4 px-6">
       <div className="flex items-center justify-between mb-2 ">
-        <PageTitle
-          title={"Gestione Infortuni" + " " + factory?.name}
-          canGoBack
-        />
-        <button
-          className="btn !rounded-full w-10 h-50 !p-0 sm:h-auto sm:w-auto sm:!px-4 sm:!py-3 sm:!rounded-md"
-          onClick={() => navigate(`/app/factory/${id}/report`)}
-        >
-          <IoMdAdd className="text-2xl sm:mr-2" />
-          <span className="hidden sm:block">Nuovo Infortunio</span>
-        </button>
+        <PageTitle title={factory?.name} canGoBack />
       </div>
       <div className="w-full h-40 px-15 py-0 border-[2px] ">
         {series && (
