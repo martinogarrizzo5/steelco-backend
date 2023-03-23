@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { IoMdCheckmark } from "react-icons/io";
 import { TfiTrash } from "react-icons/tfi";
 import ClipLoader from "react-spinners/ClipLoader";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import Input from "./Input";
 
 export interface FactoryFormData {
@@ -62,16 +63,22 @@ function FactoryForm(props: FactoryFormProps) {
             <span className="">Elimina</span>
           </button>
         )}
-        <button type="submit" className="btn flex-1">
-          {formState.isSubmitting ? (
-            <ClipLoader size={24} color="white" />
-          ) : (
-            <>
-              <IoMdCheckmark className="text-2xl mr-3" />
-              <span>Conferma</span>
-            </>
-          )}
-        </button>
+        <div className="flex w-full gap-8">
+          <button type="button" className="btn flex-1 btn--delete">
+            <RiDeleteBin6Line className="text-2xl mr-3" />
+            <span>Elimina</span>
+          </button>
+          <button type="submit" className="btn flex-1">
+            {formState.isSubmitting ? (
+              <ClipLoader size={24} color="white" />
+            ) : (
+              <>
+                <IoMdCheckmark className="text-2xl mr-3" />
+                <span>Conferma</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </form>
   );
