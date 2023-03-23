@@ -18,7 +18,7 @@ export const getReport: RequestHandler = asyncHandler(async (req, res) => {
     },
   });
 
-  const formattedData = factoriesWithLastInjury.map(factory => ({
+  const formattedData = factoriesWithLastInjury.map((factory) => ({
     id: factory.id,
     name: factory.name,
     address: factory.address,
@@ -29,24 +29,42 @@ export const getReport: RequestHandler = asyncHandler(async (req, res) => {
 });
 
 //dato un id di uno stabilimento ottenere il numero di infortuni di ogni mese
+//se dato anche un'anno ottenere il numero di infortuni di quello stabilimento in un determinato anno
 export const getFactoryHistory: RequestHandler = asyncHandler(
   async (req, res) => {
     const result = validation.getByIdParams.safeParse(req.params);
+    const result2 = validation.getByYearQuery.safeParse(req.query);
     if (!result.success) {
       return res.status(400).json({ error: "Id stabilimento invalido" });
     }
+    let factoryHistory;
 
-    const { factoryId } = result.data;
+    if (!result2.success) {
+      const { factoryId } = result.data;
 
-    const factoryHistory = await prisma.$queryRaw`
+      factoryHistory = await prisma.$queryRaw`
       SELECT 
       DATEFROMPARTS(YEAR(date), MONTH(date), 1) AS date,
       COUNT(*) AS count
-      FROM Injury
-      WHERE factoryId = ${factoryId}
+      FROM Injury i
+      WHERE i.factoryId = ${factoryId}
       GROUP BY DATEFROMPARTS(YEAR(date), MONTH(date), 1)
       ORDER BY DATEFROMPARTS(YEAR(date), MONTH(date), 1)
     `;
+    } else {
+      const { factoryId } = result.data;
+      const { injuryYear } = result2.data;
+
+      factoryHistory = await prisma.$queryRaw`
+      SELECT 
+      DATEFROMPARTS(YEAR(date), MONTH(date), 1) AS date,
+      COUNT(*) AS count
+      FROM Injury i
+      WHERE i.factoryId = ${factoryId} AND YEAR(i.date) = ${injuryYear}
+      GROUP BY DATEFROMPARTS(YEAR(date), MONTH(date), 1)
+      ORDER BY DATEFROMPARTS(YEAR(date), MONTH(date), 1)
+      `;
+    }
 
     res.json(factoryHistory);
   }
