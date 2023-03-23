@@ -73,6 +73,9 @@ export const deleteFactory: RequestHandler = asyncHandler(async (req, res) => {
 
   await prisma.factory.delete({
     where: { id: id },
+    include: {
+      injuries: true,
+    },
   });
 
   return res.json({ message: "Stabilimento eliminato con successo" });
