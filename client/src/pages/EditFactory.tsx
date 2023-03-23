@@ -48,7 +48,7 @@ function EditFactory() {
     try {
       const res = await axios.put(`/api/factory/${id}`, data);
       snackBar.show(res.data.message, SnackBarType.success);
-      navigate("/api/factory");
+      navigate(`/app/factory/${id}/report`, { replace: true });
     } catch (err) {
       console.log(err);
       showSnackbarOnAxiosError(err, snackBar);

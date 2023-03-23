@@ -16,7 +16,7 @@ function PageTitle(props: PageTitleProps) {
       <div className="flex items-center">
         {props.canGoBack && (
           <button onClick={() => navigate(-1)}>
-            <IoIosArrowBack className="text-3xl mr-3" />
+            <IoIosArrowBack className="text-3xl mr-3 text-primary" />
           </button>
         )}
         <h1 className="title">{props.title}</h1>

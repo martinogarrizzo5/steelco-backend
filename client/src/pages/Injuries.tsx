@@ -1,28 +1,43 @@
 import React, { useEffect } from "react";
 import { Factory, Injury } from "@prisma/client";
 import axios, { AxiosError } from "axios";
-import { AxisOptions, Chart } from "react-charts";
 import PageTitle from "../components/PageTitle";
 import { useNavigate, useParams } from "react-router-dom";
-import { IoMdAdd } from "react-icons/io";
 import { MdEditNote } from "react-icons/md";
 import LoadingIndicator from "../components/LoadingIndicator";
+import {
+  Chart as ChartJS,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  TimeScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import ErrorIndicator from "../components/ErrorIndicator";
+import "chartjs-adapter-date-fns";
 
-type MonthlyInjuries = {
+ChartJS.register(
+  TimeScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+interface MonthlyInjury {
   date: Date;
   count: number;
-};
-
-type Series = {
-  label: string;
-  data: MonthlyInjuries[];
-};
+}
 
 function InjuriesScreen() {
   const { id } = useParams();
   const [factory, setFactory] = React.useState<Factory>();
-  const [series, setSeries] = React.useState<Series[]>();
-  const [report, setReport] = React.useState();
+  const [series, setSeries] = React.useState<MonthlyInjury[]>();
   const [error, setError] = React.useState<string>();
   const navigate = useNavigate();
 
@@ -55,7 +70,7 @@ function InjuriesScreen() {
         date: new Date(el.date),
         count: el.count,
       }));
-      setSeries([{ label: "Factory report", data: data }]);
+      setSeries(data);
     } catch (err) {
       const error = err as AxiosError;
       if (error.response?.status === 404) {
@@ -67,22 +82,9 @@ function InjuriesScreen() {
     }
   };
 
-  const primaryAxis = React.useMemo(
-    (): AxisOptions<MonthlyInjuries> => ({
-      getValue: (el) => el.date,
-    }),
-    []
-  );
-
-  const secondaryAxes = React.useMemo(
-    (): AxisOptions<MonthlyInjuries>[] => [
-      {
-        getValue: (el) => el.count,
-        elementType: "line",
-      },
-    ],
-    []
-  );
+  if (error) {
+    return <ErrorIndicator />;
+  }
 
   if (!factory || !series) {
     return <LoadingIndicator className="mx-auto w-max my-24" />;
@@ -91,18 +93,72 @@ function InjuriesScreen() {
   return (
     <main className="max-w-4xl mx-auto mb-4 px-6">
       <div className="flex items-center justify-between mb-2 ">
-        <PageTitle title={factory?.name} canGoBack trailing={<MdEditNote className="text-4xl sm:mr-2 text-primary cursor-pointer" onClick={() => navigate(`/app/factory/${id}`)}/>}/>
+        <PageTitle
+          title={factory?.name}
+          canGoBack
+          trailing={
+            <MdEditNote
+              className="text-4xl sm:mr-2 text-primary cursor-pointer"
+              onClick={() => navigate(`/app/factory/${id}`)}
+            />
+          }
+        />
       </div>
-      <div className="w-full h-40 px-15 py-0 border-[2px] ">
-        {series && (
-          <Chart
-            options={{
-              data: series,
-              primaryAxis,
-              secondaryAxes,
-            }}
-          />
-        )}
+      <div className="px-15 py-0 relative">
+        <Line
+          options={{
+            scales: {
+              x: {
+                type: "time",
+                time: {
+                  unit: "month",
+                },
+                ticks: {
+                  autoSkip: true,
+                },
+                title: {
+                  display: true,
+                  text: "Data",
+                },
+              },
+              y: {
+                ticks: {
+                  precision: 0,
+                },
+                title: {
+                  display: true,
+                  text: "Conteggio",
+                },
+              },
+            },
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "top" as const,
+                labels: {
+                  usePointStyle: true,
+                },
+              },
+              title: {
+                display: false,
+                text: "Infortuni",
+              },
+            },
+          }}
+          data={{
+            labels: series.map((el) => el.date),
+            datasets: [
+              {
+                label: "Infortuni",
+                data: series.map((el) => el.count),
+                borderColor: "#465794",
+                backgroundColor: "#243572",
+                pointRadius: 5,
+                tension: 0.3,
+              },
+            ],
+          }}
+        />
       </div>
     </main>
   );
