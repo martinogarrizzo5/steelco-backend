@@ -5,6 +5,7 @@ import { TfiTrash } from "react-icons/tfi";
 import ClipLoader from "react-spinners/ClipLoader";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Input from "./Input";
+import axios from "axios";
 
 export interface FactoryFormData {
   name: string;
@@ -15,6 +16,7 @@ interface FactoryFormProps {
   defaultValues?: FactoryFormData;
   onSubmit?: (data: FactoryFormData) => Promise<void>;
   editForm?: boolean;
+  onDelete?: () => Promise<void>;
 }
 
 function FactoryForm(props: FactoryFormProps) {
@@ -56,29 +58,27 @@ function FactoryForm(props: FactoryFormProps) {
         />
       </div>
 
-      <div className="flex items-center">
+      <div className="flex items-center w-full gap-8">
         {props.editForm && (
-          <button className="btn flex-1 mr-8 !bg-red-600" type="submit">
-            <TfiTrash className="text-2xl mr-3" />
-            <span className="">Elimina</span>
-          </button>
-        )}
-        <div className="flex w-full gap-8">
-          <button type="button" className="btn flex-1 btn--delete">
+          <button
+            type="button"
+            className="btn flex-1 btn--delete"
+            onClick={props.onDelete}
+          >
             <RiDeleteBin6Line className="text-2xl mr-3" />
             <span>Elimina</span>
           </button>
-          <button type="submit" className="btn flex-1">
-            {formState.isSubmitting ? (
-              <ClipLoader size={24} color="white" />
-            ) : (
-              <>
-                <IoMdCheckmark className="text-2xl mr-3" />
-                <span>Conferma</span>
-              </>
-            )}
-          </button>
-        </div>
+        )}
+        <button type="submit" className="btn flex-1">
+          {formState.isSubmitting ? (
+            <ClipLoader size={24} color="white" />
+          ) : (
+            <>
+              <IoMdCheckmark className="text-2xl mr-3" />
+              <span>Conferma</span>
+            </>
+          )}
+        </button>
       </div>
     </form>
   );

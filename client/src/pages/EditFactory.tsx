@@ -2,6 +2,7 @@ import { Factory } from "@prisma/client";
 import axios, { AxiosError } from "axios";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { DeleteFactoryPopup } from "../components/DeletePopup";
 import ErrorIndicator from "../components/ErrorIndicator";
 import FactoryForm, { FactoryFormData } from "../components/FactoryForm";
 import LoadingIndicator from "../components/LoadingIndicator";
@@ -35,12 +36,33 @@ function EditFactory() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!id) return;
+
+    DeleteFactoryPopup.fire({
+      preConfirm: async () => {
+        try {
+          await axios.delete(`/api/factory/${id}`);
+          navigate("/app/factories", { replace: true });
+        } catch (err) {
+          console.log(err);
+          showSnackbarOnAxiosError(err, snackBar);
+        }
+      },
+    });
+  };
+
   const pageContent = () => {
     if (error) return <ErrorIndicator message={error} />;
     if (!factory) return <LoadingIndicator className="mt-32 mx-auto w-max" />;
 
     return (
-      <FactoryForm defaultValues={factory} onSubmit={submitEditedFactory} />
+      <FactoryForm
+        defaultValues={factory}
+        onSubmit={submitEditedFactory}
+        editForm
+        onDelete={handleDelete}
+      />
     );
   };
 

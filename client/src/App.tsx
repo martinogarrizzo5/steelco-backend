@@ -14,7 +14,7 @@ import EditFactory from "./pages/EditFactory";
 import FactoriesScreen from "./pages/Factories";
 import InitialLoading from "./pages/InitialLoading";
 import InjuriesScreen from "./pages/Injuries";
-import AddInjury from "./pages/AddInjury"
+import AddInjury from "./pages/AddInjury";
 import LoginScreen from "./pages/Login";
 import { useAuth } from "./store/authStore";
 import { useSnackBar } from "./store/snackBarStore";
@@ -53,7 +53,7 @@ function App() {
           <Route path="factory/add" element={<AddFactory />} />
           <Route path="factory/:id" element={<EditFactory />} />
           <Route path="factory/:id/report" element={<InjuriesScreen />} />
-          <Route path="injury/add" element={<AddInjury />}/>
+          <Route path="injury/add" element={<AddInjury />} />
           <Route path="*" element={<Navigate to="/app/factory" />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />
