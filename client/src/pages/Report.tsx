@@ -18,6 +18,8 @@ import {
 import { Line } from "react-chartjs-2";
 import ErrorIndicator from "../components/ErrorIndicator";
 import "chartjs-adapter-date-fns";
+import { it } from "date-fns/locale";
+import { fillMissingMonths, MonthlyInjury } from "../utils/chart";
 
 ChartJS.register(
   TimeScale,
@@ -28,11 +30,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-interface MonthlyInjury {
-  date: Date;
-  count: number;
-}
 
 function InjuriesScreen() {
   const { id } = useParams();
@@ -90,9 +87,12 @@ function InjuriesScreen() {
     return <LoadingIndicator className="mx-auto w-max my-24" />;
   }
 
+  const chartData = fillMissingMonths(series);
+  console.log(chartData);
+
   return (
-    <main className="max-w-4xl mx-auto mb-4 px-6">
-      <div className="flex items-center justify-between mb-2 ">
+    <main className="max-w-4xl mx-auto mb-4">
+      <div className="flex items-center justify-between mb-2 px-6">
         <PageTitle
           title={factory?.name}
           canGoBack
@@ -104,25 +104,36 @@ function InjuriesScreen() {
           }
         />
       </div>
-      <div className="px-15 py-0 relative h-full w-full sm:h-80">
+      <div className="px-3 py-0 relative h-60 w-full sm:h-80">
         <Line
           className="mx-auto h-full w-full"
           options={{
+            maintainAspectRatio: false,
             scales: {
               x: {
                 type: "time",
+                adapters: {
+                  date: {
+                    locale: it,
+                  },
+                },
                 time: {
                   unit: "month",
+                  round: "month",
+                  tooltipFormat: "MMMM yyyy",
+                  displayFormats: {
+                    month: "MMM",
+                  },
                 },
                 ticks: {
                   autoSkip: true,
                 },
                 title: {
                   display: true,
-                  text: "Data",
                 },
               },
               y: {
+                offset: true,
                 ticks: {
                   precision: 0,
                 },
@@ -146,11 +157,11 @@ function InjuriesScreen() {
             },
           }}
           data={{
-            labels: series.map(el => el.date),
+            labels: chartData.map(el => el.date),
             datasets: [
               {
                 label: "Infortuni",
-                data: series.map(el => el.count),
+                data: chartData.map(el => el.count),
                 borderColor: "#465794",
                 backgroundColor: "#243572",
                 pointRadius: 5,
