@@ -13,7 +13,7 @@ import AddFactory from "./pages/AddFactory";
 import EditFactory from "./pages/EditFactory";
 import FactoriesScreen from "./pages/Factories";
 import InitialLoading from "./pages/InitialLoading";
-import InjuriesScreen from "./pages/Report";
+import ReportScreen from "./pages/Report";
 import AddInjury from "./pages/AddInjury";
 import LoginScreen from "./pages/Login";
 import { useAuth } from "./store/authStore";
@@ -52,7 +52,7 @@ function App() {
           <Route path="factory" element={<FactoriesScreen />} />
           <Route path="factory/add" element={<AddFactory />} />
           <Route path="factory/:id" element={<EditFactory />} />
-          <Route path="factory/:id/report" element={<InjuriesScreen />} />
+          <Route path="factory/:id/report" element={<ReportScreen />} />
           <Route path="injury/add" element={<AddInjury />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />

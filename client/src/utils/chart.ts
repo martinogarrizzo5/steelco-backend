@@ -5,6 +5,8 @@ export interface MonthlyInjury {
 
 export function fillMissingMonths(data: MonthlyInjury[]): MonthlyInjury[] {
   const monthlyInjuries: MonthlyInjury[] = [];
+  if (data.length === 0) return monthlyInjuries;
+
   const startDate = new Date(data[0].date.getFullYear(), 0, 1);
   const endDate = new Date(data[data.length - 1].date.getFullYear(), 11, 31);
   let currentDate = new Date(startDate);

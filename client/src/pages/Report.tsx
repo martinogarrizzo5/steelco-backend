@@ -17,6 +17,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import ErrorIndicator from "../components/ErrorIndicator";
+import Select from "react-select";
 import "chartjs-adapter-date-fns";
 import { it } from "date-fns/locale";
 import { fillMissingMonths, MonthlyInjury } from "../utils/chart";
@@ -31,64 +32,72 @@ ChartJS.register(
   Legend
 );
 
-function InjuriesScreen() {
+function ReportScreen() {
   const { id } = useParams();
-  const [factory, setFactory] = React.useState<Factory>();
-  const [series, setSeries] = React.useState<MonthlyInjury[]>();
-  const [error, setError] = React.useState<string>();
   const navigate = useNavigate();
+
+  const [factory, setFactory] = React.useState<Factory>();
+  const [monthlyData, setMonthlyData] = React.useState<MonthlyInjury[]>();
+  const [error, setError] = React.useState<string>();
+  const [selectedYear, setSelectedYear] = React.useState<{
+    year: number;
+  }>({ year: new Date().getFullYear() });
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     handleFactoryFetch();
     fetchInjuriesData();
-  }, [id]);
+  }, [id, selectedYear]);
 
   const handleFactoryFetch = async () => {
     try {
       const response = await axios.get(`/api/factory/${id}`);
       setFactory(response.data);
     } catch (err) {
-      const error = err as AxiosError;
-      if (error.response?.status === 404) {
-        return navigate(`/app/factory/${id}`);
-      }
-
-      const errorMessage = (error.response?.data as any).message;
-      setError(errorMessage);
+      handleError(err as AxiosError);
     }
   };
 
   const fetchInjuriesData = async () => {
     try {
       const response = await axios.get<MonthlyFactoryReport[]>(
-        `/api/report/${id}?year=2023`
+        `/api/report/${id}?year=${selectedYear.year}`
       );
       const data = response.data.map(el => ({
         date: new Date(el.date),
         count: el.count,
       }));
-      setSeries(data);
+      setMonthlyData(data);
     } catch (err) {
-      const error = err as AxiosError;
-      if (error.response?.status === 404) {
-        return navigate(`/app/factory/${id}`);
-      }
-
-      const errorMessage = (error.response?.data as any).message;
-      setError(errorMessage);
+      handleError(err as AxiosError);
     }
   };
+
+  function handleError(err: AxiosError) {
+    if (err.response?.status === 404) {
+      return navigate("/app/factory", { replace: true });
+    }
+
+    setError((err.response?.data as any).message);
+  }
+
+  function buildPageContent() {
+    // TODO: implement
+  }
 
   if (error) {
     return <ErrorIndicator />;
   }
 
-  if (!factory || !series) {
+  if (!factory || !monthlyData) {
     return <LoadingIndicator className="mx-auto w-max my-24" />;
   }
 
-  const chartData = fillMissingMonths(series);
-  console.log(chartData);
+  let chartData = fillMissingMonths(monthlyData);
+
+  const yearOptions = Array.from({ length: 15 }, (_, i) => ({
+    year: new Date().getFullYear() - i,
+  }));
 
   return (
     <main className="max-w-4xl mx-auto mb-4">
@@ -98,17 +107,30 @@ function InjuriesScreen() {
           canGoBack
           trailing={
             <MdEditNote
-              className="text-4xl sm:mr-2 text-primary cursor-pointer"
+              className="text-4xl text-primary cursor-pointer"
               onClick={() => navigate(`/app/factory/${id}`)}
             />
           }
         />
       </div>
       <div className="px-3 py-0 relative h-60 w-full sm:h-80">
+        <div className="flex items-center justify-end">
+          <span className="mr-4">Anno: </span>
+          <Select
+            isSearchable={false}
+            options={yearOptions}
+            getOptionLabel={el => el.year.toString()}
+            getOptionValue={el => el.year.toString()}
+            onChange={el => setSelectedYear(el!)}
+            value={selectedYear}
+            className="w-32 mr-3"
+          />
+        </div>
         <Line
           className="mx-auto h-full w-full"
           options={{
             maintainAspectRatio: false,
+            normalized: true,
             scales: {
               x: {
                 type: "time",
@@ -175,4 +197,4 @@ function InjuriesScreen() {
   );
 }
 
-export default InjuriesScreen;
+export default ReportScreen;
