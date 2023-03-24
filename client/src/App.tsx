@@ -13,7 +13,7 @@ import AddFactory from "./pages/AddFactory";
 import EditFactory from "./pages/EditFactory";
 import FactoriesScreen from "./pages/Factories";
 import InitialLoading from "./pages/InitialLoading";
-import InjuriesScreen from "./pages/Injuries";
+import InjuriesScreen from "./pages/Report";
 import AddInjury from "./pages/AddInjury";
 import LoginScreen from "./pages/Login";
 import { useAuth } from "./store/authStore";

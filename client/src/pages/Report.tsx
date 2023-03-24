@@ -66,7 +66,7 @@ function InjuriesScreen() {
       const response = await axios.get<MonthlyFactoryReport[]>(
         `/api/report/${id}`
       );
-      const data = response.data.map((el) => ({
+      const data = response.data.map(el => ({
         date: new Date(el.date),
         count: el.count,
       }));
@@ -131,7 +131,6 @@ function InjuriesScreen() {
                 },
               },
             },
-            responsive: true,
             plugins: {
               legend: {
                 position: "top" as const,
@@ -146,11 +145,11 @@ function InjuriesScreen() {
             },
           }}
           data={{
-            labels: series.map((el) => el.date),
+            labels: series.map(el => el.date),
             datasets: [
               {
                 label: "Infortuni",
-                data: series.map((el) => el.count),
+                data: series.map(el => el.count),
                 borderColor: "#465794",
                 backgroundColor: "#243572",
                 pointRadius: 5,
