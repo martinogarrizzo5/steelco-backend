@@ -54,10 +54,8 @@ function App() {
           <Route path="factory/:id" element={<EditFactory />} />
           <Route path="factory/:id/report" element={<InjuriesScreen />} />
           <Route path="injury/add" element={<AddInjury />} />
-          <Route path="*" element={<Navigate to="/app/factory" />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />
-        <Route path="*" element={<Navigate to="/app/factory" />} />
       </Routes>
       {snackBar.isShown && <SnackBar />}
     </>

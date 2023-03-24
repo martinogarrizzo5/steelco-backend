@@ -64,7 +64,7 @@ function InjuriesScreen() {
   const fetchInjuriesData = async () => {
     try {
       const response = await axios.get<MonthlyFactoryReport[]>(
-        `/api/report/${id}`
+        `/api/report/${id}?year=2023`
       );
       const data = response.data.map((el) => ({
         date: new Date(el.date),
@@ -104,8 +104,9 @@ function InjuriesScreen() {
           }
         />
       </div>
-      <div className="px-15 py-0 relative">
+      <div className="px-15 py-0 relative h-full w-full sm:h-80">
         <Line
+          className="mx-auto h-full w-full"
           options={{
             scales: {
               x: {

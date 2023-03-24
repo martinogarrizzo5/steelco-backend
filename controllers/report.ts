@@ -1,12 +1,9 @@
-import { RequestHandler } from "express";
+import { query, RequestHandler } from "express";
 import prisma from "../prisma/db_connection";
 import asyncHandler from "../middlewares/asyncHandler";
 import * as validation from "../validation/report";
+import { Prisma } from "@prisma/client";
 
-/* 
-  return a list with all factories and the date of the last
-  injury on each of them
-*/
 export const getReport: RequestHandler = asyncHandler(async (req, res) => {
   const factoriesWithLastInjury = await prisma.factory.findMany({
     orderBy: { name: "asc" },
@@ -28,43 +25,31 @@ export const getReport: RequestHandler = asyncHandler(async (req, res) => {
   res.json(formattedData);
 });
 
-//dato un id di uno stabilimento ottenere il numero di infortuni di ogni mese
-//se dato anche un'anno ottenere il numero di infortuni di quello stabilimento in un determinato anno
 export const getFactoryHistory: RequestHandler = asyncHandler(
   async (req, res) => {
-    const result = validation.getByIdParams.safeParse(req.params);
-    const result2 = validation.getByYearQuery.safeParse(req.query);
-    if (!result.success) {
+    const paramsResult = validation.getByIdParams.safeParse(req.params);
+    const queryResult = validation.getByIdQuery.safeParse(req.query);
+    if (!paramsResult.success || !queryResult.success) {
       return res.status(400).json({ error: "Id stabilimento invalido" });
     }
-    let factoryHistory;
+    const { factoryId } = paramsResult.data;
+    const { year } = queryResult.data;
 
-    if (!result2.success) {
-      const { factoryId } = result.data;
-
-      factoryHistory = await prisma.$queryRaw`
-      SELECT 
-      DATEFROMPARTS(YEAR(date), MONTH(date), 1) AS date,
-      COUNT(*) AS count
-      FROM Injury i
-      WHERE i.factoryId = ${factoryId}
-      GROUP BY DATEFROMPARTS(YEAR(date), MONTH(date), 1)
-      ORDER BY DATEFROMPARTS(YEAR(date), MONTH(date), 1)
-    `;
-    } else {
-      const { factoryId } = result.data;
-      const { injuryYear } = result2.data;
-
-      factoryHistory = await prisma.$queryRaw`
-      SELECT 
-      DATEFROMPARTS(YEAR(date), MONTH(date), 1) AS date,
-      COUNT(*) AS count
-      FROM Injury i
-      WHERE i.factoryId = ${factoryId} AND YEAR(i.date) = ${injuryYear}
-      GROUP BY DATEFROMPARTS(YEAR(date), MONTH(date), 1)
-      ORDER BY DATEFROMPARTS(YEAR(date), MONTH(date), 1)
-      `;
+    let whereCondition = Prisma.sql`WHERE i.factoryId = ${factoryId}`;
+    if (year) {
+      whereCondition = Prisma.sql`${whereCondition} AND YEAR(i.date) = ${year}`;
     }
+
+    let dbQuery = Prisma.sql`
+      SELECT 
+      DATEFROMPARTS(YEAR(date), MONTH(date), 1) AS date,
+      COUNT(*) AS count
+      FROM Injury i ${whereCondition}
+      GROUP BY DATEFROMPARTS(YEAR(date), MONTH(date), 1) 
+      ORDER BY DATEFROMPARTS(YEAR(date), MONTH(date), 1) 
+    `;
+
+    let factoryHistory = await prisma.$queryRaw(dbQuery);
 
     res.json(factoryHistory);
   }
