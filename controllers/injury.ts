@@ -10,11 +10,21 @@ export const getInjuries: RequestHandler = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Valori inseriti invalidi" });
   }
 
-  const { factoryId } = result.data;
+  const { factoryId, year } = result.data;
+
+  let firstYearDay;
+  let lastYearDay;
+  if (year) {
+    firstYearDay = new Date(year, 0, 1);
+    lastYearDay = new Date(year, 11, 31);
+  }
 
   const injuries = await prisma.injury.findMany({
     orderBy: { date: "asc" },
-    where: { factoryId: factoryId },
+    where: {
+      factoryId: factoryId,
+      date: { gte: firstYearDay, lte: lastYearDay },
+    },
   });
 
   return res.json(injuries);

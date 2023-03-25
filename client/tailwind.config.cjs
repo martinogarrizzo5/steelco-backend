@@ -12,6 +12,7 @@ module.exports = {
         tile: "#F7F7FA",
         tileHover: "#EFEFF8",
         tileActive: "#E8E8F3",
+        subTitle: "#77787C",
       },
     },
   },

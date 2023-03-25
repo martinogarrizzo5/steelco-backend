@@ -3,3 +3,12 @@ export const getFormattedDate = (date: Date | string) => {
     dateStyle: "long",
   });
 };
+
+export const shortenText = (text: string, maxLength: number) => {
+  const newText = text;
+  if (newText.length > maxLength) {
+    return newText.substring(0, maxLength) + "...";
+  }
+
+  return newText;
+};
