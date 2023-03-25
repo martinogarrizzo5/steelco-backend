@@ -8,8 +8,10 @@ import PageTitle from "../components/PageTitle";
 
 function AddInjury(){
     return (
-        <h1>A</h1>
-    )
+        <main className="max-w-xl mx-auto mb-4 px-6">
+          <PageTitle title="Aggiungi Infortunio" canGoBack />
+        </main>
+      );
 }
 
 export default AddInjury

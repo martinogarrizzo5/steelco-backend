@@ -21,6 +21,7 @@ import Select from "react-select";
 import "chartjs-adapter-date-fns";
 import { it } from "date-fns/locale";
 import { fillMissingMonths, MonthlyInjury } from "../utils/chart";
+import { IoMdAdd } from "react-icons/io"
 
 ChartJS.register(
   TimeScale,
@@ -192,6 +193,15 @@ function ReportScreen() {
             ],
           }}
         />
+      </div>
+      <div className="flex items-center w-full gap-8 mt-16">
+      <button
+          className="btn flex-1 cursor-pointer"
+          onClick={() => navigate("/app/injury/add") }
+        >
+          <IoMdAdd className="text-2xl sm:mr-2" />
+          <span className="hidden sm:block">Nuovo Infortunio</span>
+        </button>
       </div>
     </main>
   );
