@@ -3,7 +3,6 @@ import { Factory, Injury } from "@prisma/client";
 import axios, { AxiosError } from "axios";
 import PageTitle from "../components/PageTitle";
 import { useNavigate, useParams } from "react-router-dom";
-import { MdEditNote } from "react-icons/md";
 import { FiEdit3 } from "react-icons/fi";
 import LoadingIndicator from "../components/LoadingIndicator";
 import {
@@ -251,9 +250,9 @@ function ReportScreen() {
               <div
                 key={`injury-${injury.id}`}
                 className="flex items-center border-b-2 border-grayBorder 
-                py-4 px-4 sm:px-8 hover:bg-tileHover active:bg-tileActive cursor-pointer"
+                 hover:bg-tileHover active:bg-tileActive cursor-pointer"
               >
-                <div className="flex-1">
+                <div className="flex-1 py-4 px-4 sm:px-8" onClick={() => {}}>
                   <h3 className="text-lg font-medium">
                     {shortenText(injury.description, 40)}
                   </h3>
@@ -261,7 +260,7 @@ function ReportScreen() {
                     {injury.date.toLocaleDateString("it")}
                   </span>
                 </div>
-                <div className="flex ml-4">
+                <div className="flex ml-4 px-4 sm:px-8">
                   <IconButton
                     icon={RiDeleteBin6Line}
                     onClick={() => {}}
