@@ -25,6 +25,7 @@ import { IoMdAdd } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { shortenText } from "../utils/format";
 import IconButton from "../components/IconButton";
+import { DeleteInjuryPopup } from "../components/DeletePopup";
 
 ChartJS.register(
   TimeScale,
@@ -111,26 +112,24 @@ function ReportScreen() {
     setError((err.response?.data as any).message);
   }
 
-  if (error) {
-    return <ErrorIndicator />;
-  }
+  const handleInjuryDelete = async (injuryId: number) => {
+    DeleteInjuryPopup.fire({
+      preConfirm: async () => {
+        try {
+          await axios.delete(`/api/injury/${injuryId}`);
+          handleInjuriesFetch();
+          handleReportFetch();
+        } catch (err) {
+          handleNetworkError(err as AxiosError);
+        }
+      },
+    });
+  };
 
-  if (!factory || !report) {
-    return <LoadingIndicator className="mx-auto w-max my-24" />;
-  }
+  const buildChart = () => {
+    if (!report) return null;
+    let chartData = fillMissingMonths(report);
 
-  let chartData = fillMissingMonths(report);
-
-  const yearOptions = Array.from({ length: 15 }, (_, i) => ({
-    year: new Date().getFullYear() - i,
-  }));
-
-  const totalInjuries = chartData.reduce(
-    (sum, monthlyReport) => sum + monthlyReport.count,
-    0
-  );
-
-  function buildChart() {
     return (
       <Line
         className="mx-auto h-full w-full"
@@ -200,7 +199,24 @@ function ReportScreen() {
         }}
       />
     );
+  };
+
+  if (error) {
+    return <ErrorIndicator />;
   }
+
+  if (!factory || !report) {
+    return <LoadingIndicator className="mx-auto w-max my-24" />;
+  }
+
+  const yearOptions = Array.from({ length: 15 }, (_, i) => ({
+    year: new Date().getFullYear() - i,
+  }));
+
+  const totalInjuries = report.reduce(
+    (sum, monthlyReport) => sum + monthlyReport.count,
+    0
+  );
 
   return (
     <main className="max-w-4xl mx-auto px-3">
@@ -263,7 +279,7 @@ function ReportScreen() {
                 <div className="flex ml-4 px-4 sm:px-8">
                   <IconButton
                     icon={RiDeleteBin6Line}
-                    onClick={() => {}}
+                    onClick={() => handleInjuryDelete(injury.id)}
                     className="text-2xl text-red-500 hover:bg-red-500 cursor-pointer mr-4 p-1.5"
                   />
                   <IconButton

@@ -15,4 +15,9 @@ export const DeleteFactoryPopup = DeletePopup.mixin({
   text: "Cancellare uno stabilimento cancella anche tutti gli infortuni relativi",
 });
 
+export const DeleteInjuryPopup = DeletePopup.mixin({
+  title: "Sei sicuro di cancellare l'infortunio?",
+  text: "Una volta cancellato non potrai più recuperarlo",
+});
+
 export default DeletePopup;
