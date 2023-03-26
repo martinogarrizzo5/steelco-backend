@@ -53,7 +53,6 @@ function ReportScreen() {
 
   useEffect(() => {
     handleFactoryFetch();
-    handleReportFetch();
   }, [id]);
 
   useEffect(() => {
