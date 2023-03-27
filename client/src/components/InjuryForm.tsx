@@ -9,9 +9,10 @@ import Placeholder from "react-select/dist/declarations/src/components/Placehold
 import Select from "react-select";
 import { string } from "zod";
 import { Factory } from "@prisma/client";
-import { Calendar } from 'react-date-range';
-import 'react-date-range/dist/styles.css'
-import 'react-date-range/dist/theme/default.css'
+import { Calendar } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import DatePicker from "./DatePicker";
 
 export interface InjuryFormData {
   factory: Factory;
@@ -75,9 +76,7 @@ function InjuryForm(props: InjuryFormProps) {
         </div>
         <div className="flex flex-col mb-6">
           <label className="label mb-2">Data</label>
-          <div className="input p-3">
-              <span>27/03/2023</span>
-          </div>
+          <DatePicker />
           {/* <Controller
             name="date"
             control={control}
@@ -92,6 +91,7 @@ function InjuryForm(props: InjuryFormProps) {
             name="description"
             type="textarea"
             placeholder="Inserisci Descrizione"
+            className="h-40"
             formRegister={register("description")}
           />
         </div>
