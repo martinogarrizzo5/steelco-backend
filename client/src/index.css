@@ -15,7 +15,7 @@ a {
   text-decoration: none;
 }
 
-input {
+input, textarea {
   background-color: transparent;
   outline: none;
 }

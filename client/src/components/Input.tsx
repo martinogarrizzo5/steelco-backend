@@ -19,14 +19,24 @@ function Input(props: InputProps) {
         props.trailing && "!pr-16"
       )}
     >
-      <input
-        type={props.type}
-        className="w-full py-3 px-4"
-        placeholder={props.placeholder}
-        {...props.formRegister}
-        name={props.name}
-        id={props.name}
-      />
+      {props.type === "textarea" ? (
+        <textarea
+          className="w-full p-3 h-32 resize-none"
+          placeholder={props.placeholder}
+          {...props.formRegister}
+          name={props.name}
+          id={props.name}
+        />
+      ) : (
+        <input
+          type={props.type}
+          className="w-full py-3 px-4"
+          placeholder={props.placeholder}
+          {...props.formRegister}
+          name={props.name}
+          id={props.name}
+        />
+      )}
       <button
         type="button"
         onClick={props.onClick}

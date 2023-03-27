@@ -1,18 +1,18 @@
-import axios from "axios";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import FactoryForm, { FactoryFormData } from "../components/FactoryForm";
-import { SnackBarType, useSnackBar } from "../store/snackBarStore";
-import { showSnackbarOnAxiosError } from "../utils/error";
+import InjuryForm from "../components/InjuryForm";
 import PageTitle from "../components/PageTitle";
+import { InjuryFormData } from "../components/InjuryForm";
 
-function AddInjury(){
-    return (
-        <main className="max-w-xl mx-auto mb-4 px-6">
-          <PageTitle title="Aggiungi Infortunio" canGoBack />
-        </main>
-      );
+function AddInjury() {
+  const submitData = (data: InjuryFormData) => {
+    console.log(data);
+  };
+
+  return (
+    <main className="max-w-xl mx-auto mb-4 px-6">
+      <PageTitle title="Aggiungi Infortunio" canGoBack />
+      <InjuryForm onSubmit={submitData} />
+    </main>
+  );
 }
 
-export default AddInjury
-
+export default AddInjury;
