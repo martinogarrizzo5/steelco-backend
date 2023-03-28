@@ -7,19 +7,23 @@ const isAuth: RequestHandler = asyncHandler(async (req, res, next) => {
   const bearerToken = req.get("Authorization");
 
   if (!bearerToken) {
-    return res.status(400).json({ message: "Bearer token mancante" });
+    return res.status(401).json({ message: "Bearer token mancante" });
   }
 
   const [bearerString, token] = bearerToken.split(" ");
 
   if (bearerString !== "Bearer") {
-    return res.status(400).json({ message: "Bearer token richiesto" });
+    return res.status(401).json({ message: "Bearer token richiesto" });
   }
 
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
   } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ message: "Token Expired" });
+    }
+
     return res.status(401).json({ message: "Token invalido" });
   }
 
