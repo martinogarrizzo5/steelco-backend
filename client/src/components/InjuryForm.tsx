@@ -7,12 +7,11 @@ import axios, { AxiosError } from "axios";
 import Input from "./Input";
 import Placeholder from "react-select/dist/declarations/src/components/Placeholder";
 import Select from "react-select";
-import { string } from "zod";
 import { Factory } from "@prisma/client";
-import { Calendar } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import DatePicker from "./DatePicker";
+import { IoMdCheckmark } from "react-icons/io";
 
 export interface InjuryFormData {
   factory: Factory;
@@ -70,13 +69,24 @@ function InjuryForm(props: InjuryFormProps) {
                 getOptionValue={(el) => el.id.toString()}
                 value={value}
                 onChange={onChange}
+                theme={(theme) =>({
+                  ...theme,
+                  borderRadius: 5        
+                })}
+                styles={{
+                  control: (base, state) => ({
+                    ...base,
+                    background: "#EFEFF8",
+                  })
+                }}
               />
             )}
           />
         </div>
         <div className="flex flex-col mb-6">
           <label className="label mb-2">Data</label>
-          <DatePicker />
+          <DatePicker 
+          />
           {/* <Controller
             name="date"
             control={control}
@@ -96,7 +106,7 @@ function InjuryForm(props: InjuryFormProps) {
           />
         </div>
         <button type="submit" className="btn w-full mt-8">
-          {props.edit ? <span>Modifica</span> : <span>Aggiungi</span>}
+          {props.edit ? <><span>Modifica</span></> : <><IoMdCheckmark className="text-2xl mr-3" /><span>Conferma</span></>}
         </button>
       </form>
     </main>
