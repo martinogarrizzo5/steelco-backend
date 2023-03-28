@@ -7,7 +7,7 @@
     "server": "nodemon server.ts",
     "buildServer": "npx tsc",
     "client": "cd client && npm run dev",
-    "buildClient": "cd client && npm run build && rm -d -r ../build/client && mv -f ./dist/ ../build/client",
+    "buildClient": "cd client && npm run build && rm -d -r ../build/client; mv -f ./dist/ ../build/client",
     "dev": "concurrently \"npm run server\" \"npm run client\" ",
     "build": "npm run buildServer && npm run buildClient",
     "start": "node ./build/server.js",
@@ -26,6 +26,7 @@
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.3",
     "@types/react": "^18.0.28",
+    "@types/react-date-range": "^1.4.4",
     "concurrently": "^7.6.0",
     "nodemon": "^2.0.21",
     "prisma": "^4.11.0",
@@ -44,6 +45,8 @@
     "helmet": "^6.0.1",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
+    "react-calendar": "^4.1.0",
+    "react-date-range": "^1.4.0",
     "sweetalert2": "^11.7.3",
     "zod": "^3.21.4"
   }

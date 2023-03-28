@@ -9,6 +9,7 @@ interface InputProps {
   trailing?: React.ReactNode;
   formRegister?: UseFormRegisterReturn;
   placeholder?: string;
+  className?: string;
 }
 
 function Input(props: InputProps) {
@@ -16,17 +17,28 @@ function Input(props: InputProps) {
     <div
       className={classNames(
         "input w-full flex relative",
+        props.className,
         props.trailing && "!pr-16"
       )}
     >
-      <input
-        type={props.type}
-        className="w-full py-3 px-4"
-        placeholder={props.placeholder}
-        {...props.formRegister}
-        name={props.name}
-        id={props.name}
-      />
+      {props.type === "textarea" ? (
+        <textarea
+          className="w-full p-3 resize-none"
+          placeholder={props.placeholder}
+          {...props.formRegister}
+          name={props.name}
+          id={props.name}
+        />
+      ) : (
+        <input
+          type={props.type}
+          className="w-full py-3 px-4"
+          placeholder={props.placeholder}
+          {...props.formRegister}
+          name={props.name}
+          id={props.name}
+        />
+      )}
       <button
         type="button"
         onClick={props.onClick}

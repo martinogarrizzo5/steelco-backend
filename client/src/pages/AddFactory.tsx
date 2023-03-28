@@ -6,6 +6,7 @@ import { SnackBarType, useSnackBar } from "../store/snackBarStore";
 import { showSnackbarOnAxiosError } from "../utils/error";
 import PageTitle from "../components/PageTitle";
 
+
 function AddFactory() {
   const navigate = useNavigate();
   const snackBar = useSnackBar();
