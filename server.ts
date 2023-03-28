@@ -11,6 +11,7 @@ import helmet from "helmet";
 import cors from "cors";
 import errorHandler from "./middlewares/errorHandler";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(morgan(process.env.NODE_ENV === "production" ? "common" : "dev"));
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 // api routes

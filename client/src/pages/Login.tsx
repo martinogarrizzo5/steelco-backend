@@ -23,7 +23,6 @@ function LoginScreen() {
   const { register, handleSubmit, formState } = useForm<LoginFormData>();
 
   const onSubmit = async (data: LoginFormData) => {
-    console.log(data);
     await auth.login(data.username, data.password, true);
   };
 

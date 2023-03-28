@@ -14,7 +14,7 @@ function AddFactory() {
     try {
       const res = await axios.post("/api/factory", data);
       snackBar.show(res.data.message, SnackBarType.success);
-      navigate("/api/factory");
+      navigate("/app/factory");
     } catch (err) {
       console.log(err);
       showSnackbarOnAxiosError(err, snackBar);
@@ -29,4 +29,4 @@ function AddFactory() {
   );
 }
 
-export default AddFactory
+export default AddFactory;

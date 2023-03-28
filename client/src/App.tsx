@@ -1,12 +1,5 @@
 import { useEffect } from "react";
-import { MdSmartScreen } from "react-icons/md";
-import {
-  Route,
-  Routes,
-  useNavigate,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import SnackBar from "./components/SnackBar";
 import AppLayout from "./layout/AppLayout";
 import AddFactory from "./pages/AddFactory";
@@ -18,6 +11,8 @@ import AddInjury from "./pages/AddInjury";
 import LoginScreen from "./pages/Login";
 import { useAuth } from "./store/authStore";
 import { useSnackBar } from "./store/snackBarStore";
+import axios from "axios";
+import { setupAuthRefreshInterceptor } from "./utils/axiosAuthInterceptor";
 
 function App() {
   const auth = useAuth();
@@ -26,6 +21,7 @@ function App() {
   const snackBar = useSnackBar();
 
   useEffect(() => {
+    setupAuthRefreshInterceptor(axios, () => auth.logout());
     auth.fetchUser();
   }, []);
 

@@ -30,10 +30,11 @@ export const useAuth = create<IAuth>()(set => ({
 
   fetchUser: async () => {
     set({ isUserLoading: true });
-    const token = localStorage.getItem("token");
-    if (!token) return set({ isUserLoading: false, user: null });
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
 
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     try {
       const response = await axios.get("/auth/user");
       set({ user: response.data, isUserLoading: false, error: null });
@@ -42,14 +43,14 @@ export const useAuth = create<IAuth>()(set => ({
       const errorMessage = (error.response?.data as any).error;
 
       set({ user: null, isUserLoading: false, error: errorMessage });
-      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
       axios.defaults.headers.common["Authorization"] = null;
     }
   },
 
   login: async (username, password, saveCredentials) => {
     set({ isLogging: true });
-    // api request
+
     try {
       const response = await axios.post("/auth/login", { username, password });
       const token = response.data.token;
@@ -57,7 +58,7 @@ export const useAuth = create<IAuth>()(set => ({
 
       set({ user: user, isLogging: false, error: null });
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      if (saveCredentials) localStorage.setItem("token", token);
+      if (saveCredentials) localStorage.setItem("accessToken", token);
     } catch (err) {
       const error = err as AxiosError;
       const responseData = error.response?.data as any;
@@ -67,8 +68,9 @@ export const useAuth = create<IAuth>()(set => ({
     }
   },
 
-  logout: () => {
-    localStorage.removeItem("token");
+  logout: async () => {
+    localStorage.removeItem("accessToken");
+    await axios.post("/auth/logout");
     set({ user: null, error: null });
   },
 }));

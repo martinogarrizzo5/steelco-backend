@@ -28,7 +28,7 @@ function EditFactory() {
     } catch (err) {
       const error = err as AxiosError;
       if (error.response?.status === 404) {
-        return navigate("/api/factory/new");
+        return navigate("/app/factory/new");
       }
 
       const errorMessage = (error.response?.data as any).message;
@@ -43,7 +43,7 @@ function EditFactory() {
       preConfirm: async () => {
         try {
           await axios.delete(`/api/factory/${id}`);
-          navigate("/app/factories", { replace: true });
+          navigate("/app/factory", { replace: true });
         } catch (err) {
           console.log(err);
           showSnackbarOnAxiosError(err, snackBar);
