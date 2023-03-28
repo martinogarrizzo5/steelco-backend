@@ -283,7 +283,7 @@ function ReportScreen() {
                   />
                   <IconButton
                     icon={FiEdit3}
-                    onClick={() => {}}
+                    onClick={() => navigate(`/app/injury/${injury.id}`)}
                     className="text-2xl p-1.5"
                   />
                 </div>

@@ -21,7 +21,7 @@ export interface InjuryFormData {
 
 interface InjuryFormProps {
   onSubmit: (data: InjuryFormData) => void;
-  defaultData?: Factory;
+  defaultData?: InjuryFormData;
   edit?: boolean;
   onDelete?: () => void;
 }
