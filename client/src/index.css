@@ -28,6 +28,7 @@ body {
 @layer base {
   :root {
     --primaryColor: theme("colors.primary");
+    --inputColor: theme("colors.input");
   }
 }
 

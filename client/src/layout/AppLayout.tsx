@@ -11,7 +11,7 @@ function AppLayout() {
 
   return (
     <>
-      <div className="relative flex items-center max-w-4xl mx-auto">
+      <div className="flex items-center max-w-4xl mx-auto">
         <img
           src={logoImg}
           alt="logo"
@@ -20,7 +20,7 @@ function AppLayout() {
         />
         <IconButton
           icon={FiLogOut}
-          className="absolute right-8 top-1/2 translate-y-[-60%] p-2 text-2xl sm:text-3xl hover:bg-red-600 text-red-600"
+          className="absolute right-4 sm:right-8 top-3 p-2 text-2xl sm:text-3xl hover:bg-red-600 text-red-600"
           onClick={() => auth.logout()}
         />
       </div>
