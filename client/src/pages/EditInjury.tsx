@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import PageTitle from "../components/PageTitle";
 import InjuryForm, { InjuryFormData } from "../components/InjuryForm";
 import { useParams, useNavigate } from "react-router-dom";
-import { Injury } from "@prisma/client";
+import { Factory, Injury } from "@prisma/client";
 import axios, { AxiosError } from "axios";
 import ErrorIndicator from "../components/ErrorIndicator";
 import LoadingIndicator from "../components/LoadingIndicator";
