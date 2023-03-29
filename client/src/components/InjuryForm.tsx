@@ -33,7 +33,9 @@ function InjuryForm(props: InjuryFormProps) {
     watch,
     formState: { errors },
     control,
-  } = useForm<InjuryFormData>();
+  } = useForm<InjuryFormData>({
+    defaultValues: props.defaultData
+  });
   const [factories, setFactories] = useState<Factory[]>([]);
   const [error, setError] = useState<string>();
 
@@ -79,6 +81,7 @@ function InjuryForm(props: InjuryFormProps) {
                     background: "#EFEFF8",
                   })
                 }}
+                
               />
             )}
           />
@@ -86,6 +89,7 @@ function InjuryForm(props: InjuryFormProps) {
         <div className="flex flex-col mb-6">
           <label className="label mb-2">Data</label>
           <DatePicker 
+            
           />
           {/* <Controller
             name="date"
