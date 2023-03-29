@@ -1,4 +1,3 @@
-import { constants } from "buffer";
 import { useState } from "react";
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -33,7 +32,9 @@ function InjuryForm(props: InjuryFormProps) {
     watch,
     formState: { errors },
     control,
-  } = useForm<InjuryFormData>();
+  } = useForm<InjuryFormData>({
+    defaultValues: props.defaultData,
+  });
   const [factories, setFactories] = useState<Factory[]>([]);
   const [error, setError] = useState<string>();
 
@@ -84,14 +85,13 @@ function InjuryForm(props: InjuryFormProps) {
         </div>
         <div className="flex flex-col mb-6">
           <label className="label mb-2">Data</label>
-          <DatePicker />
-          {/* <Controller
+          <Controller
             name="date"
             control={control}
             render={({ field: { value, onChange } }) => (
-              <Calendar onChange={onChange} value={value} className="mb-6" />
+              <DatePicker date={value} onChange={onChange} />
             )}
-          /> */}
+          />
         </div>
         <div className="flex flex-col mb-6">
           <label className="label mb-2">Description</label>

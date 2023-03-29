@@ -1,9 +1,5 @@
 import { it } from "date-fns/locale";
-
-export interface MonthlyReport {
-  date: Date;
-  count: number;
-}
+import { MonthlyReport } from "../types";
 
 export const chartOptions = {
   maintainAspectRatio: false,
@@ -75,7 +71,7 @@ export function fillMissingMonths(data: MonthlyReport[]): MonthlyReport[] {
   let currentDate = new Date(startDate);
 
   while (currentDate <= endDate) {
-    const matchingData = data.find(d => {
+    const matchingData = data.find((d) => {
       return (
         d.date.getMonth() === currentDate.getMonth() &&
         d.date.getFullYear() === currentDate.getFullYear()

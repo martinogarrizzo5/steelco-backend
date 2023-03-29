@@ -1,9 +1,16 @@
 import React from "react";
+import { BsCalendar3 } from "react-icons/bs";
 
-function DatePicker() {
+interface DatePickerProps {
+  date: Date;
+  onChange: (value: Date) => void;
+}
+
+function DatePicker(props: DatePickerProps) {
   return (
-    <div className="input p-3 cursor-pointer">
-      <span>27/03/2023</span>
+    <div className="input p-3 pr-4 cursor-pointer flex justify-between">
+      <span>{props.date.toLocaleDateString()}</span>
+      <BsCalendar3 className="text-xl text-primary" />
     </div>
   );
 }

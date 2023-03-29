@@ -76,7 +76,7 @@ function ReportScreen() {
         `/api/report/${id}`,
         { params: { year: selectedYear.year } }
       );
-      const data = response.data.map(el => ({
+      const data = response.data.map((el) => ({
         date: new Date(el.date),
         count: el.count,
       }));
@@ -93,7 +93,7 @@ function ReportScreen() {
       const response = await axios.get<Injury[]>("/api/injury", {
         params: { year: selectedYear.year, factoryId: id },
       });
-      const injuries = response.data.map(el => ({
+      const injuries = response.data.map((el) => ({
         ...el,
         date: new Date(el.date),
       }));
@@ -184,11 +184,11 @@ function ReportScreen() {
           },
         }}
         data={{
-          labels: chartData.map(el => el.date),
+          labels: chartData.map((el) => el.date),
           datasets: [
             {
               label: "Infortuni",
-              data: chartData.map(el => el.count),
+              data: chartData.map((el) => el.count),
               borderColor: "#465794",
               backgroundColor: "#243572",
               pointRadius: 5,
@@ -237,9 +237,9 @@ function ReportScreen() {
           <Select
             isSearchable={false}
             options={yearOptions}
-            getOptionLabel={el => el.year.toString()}
-            getOptionValue={el => el.year.toString()}
-            onChange={el => setSelectedYear(el!)}
+            getOptionLabel={(el) => el.year.toString()}
+            getOptionValue={(el) => el.year.toString()}
+            onChange={(el) => setSelectedYear(el!)}
             value={selectedYear}
             className="w-32 mr-3"
           />
@@ -261,9 +261,10 @@ function ReportScreen() {
             <h2 className="text-xl font-semibold mx-auto sm:mx-0 mt-2 mb-4">
               {totalInjuries} Infortuni Totali Nel {selectedYear.year}
             </h2>
-            {injuries.map(injury => (
+            {injuries.map((injury) => (
               <div
                 key={`injury-${injury.id}`}
+                onClick={() => navigate(`/app/injury/${injury.id}`)}
                 className="flex items-center border-b-2 border-grayBorder 
                  hover:bg-tileHover active:bg-tileActive cursor-pointer"
               >
@@ -282,8 +283,8 @@ function ReportScreen() {
                     className="text-2xl text-red-500 hover:bg-red-500 cursor-pointer mr-4 p-1.5"
                   />
                   <IconButton
+                    onClick={() => {}}
                     icon={FiEdit3}
-                    onClick={() => navigate(`/app/injury/${injury.id}`)}
                     className="text-2xl p-1.5"
                   />
                 </div>

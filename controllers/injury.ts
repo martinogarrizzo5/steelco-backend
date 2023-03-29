@@ -25,6 +25,15 @@ export const getInjuries: RequestHandler = asyncHandler(async (req, res) => {
       factoryId: factoryId,
       date: { gte: firstYearDay, lte: lastYearDay },
     },
+    include: {
+      factory: {
+        select: {
+          name: true,
+          address: true,
+          id: true,
+        },
+      },
+    },
   });
 
   return res.json(injuries);
@@ -38,7 +47,18 @@ export const getInjurieById: RequestHandler = asyncHandler(async (req, res) => {
 
   const { id } = result.data;
 
-  const injurie = await prisma.injury.findUnique({ where: { id: id } });
+  const injurie = await prisma.injury.findUnique({
+    where: { id: id },
+    include: {
+      factory: {
+        select: {
+          name: true,
+          address: true,
+          id: true,
+        },
+      },
+    },
+  });
   if (!injurie) {
     return res.status(404).json({ message: "Infortunio non trovato" });
   }
