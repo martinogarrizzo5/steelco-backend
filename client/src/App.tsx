@@ -4,6 +4,7 @@ import SnackBar from "./components/SnackBar";
 import AppLayout from "./layout/AppLayout";
 import AddFactory from "./pages/AddFactory";
 import EditFactory from "./pages/EditFactory";
+import EditInjury from "./pages/EditInjury";
 import FactoriesScreen from "./pages/Factories";
 import InitialLoading from "./pages/InitialLoading";
 import ReportScreen from "./pages/Report";
@@ -50,6 +51,7 @@ function App() {
           <Route path="factory/:id" element={<EditFactory />} />
           <Route path="factory/:id/report" element={<ReportScreen />} />
           <Route path="injury/add" element={<AddInjury />} />
+          <Route path="injury/:id" element={<EditInjury />} />
         </Route>
         <Route path="/login" element={<LoginScreen />} />
       </Routes>

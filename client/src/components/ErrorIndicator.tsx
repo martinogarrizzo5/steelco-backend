@@ -15,7 +15,7 @@ function ErrorIndicator(props: ErrorIndicatorProps) {
       <span className="block mb-4">
         {props.message ? props.message : defaultErrorMessage}
       </span>
-      <button className="btn mx-auto" onClick={() => navigate("/app")}>
+      <button className="btn mx-auto" onClick={() => navigate("/app/factory")}>
         Torna alla home
       </button>
     </div>

@@ -1,4 +1,3 @@
-import { constants } from "buffer";
 import { useState } from "react";
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -7,12 +6,11 @@ import axios, { AxiosError } from "axios";
 import Input from "./Input";
 import Placeholder from "react-select/dist/declarations/src/components/Placeholder";
 import Select from "react-select";
-import { string } from "zod";
 import { Factory } from "@prisma/client";
-import { Calendar } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import DatePicker from "./DatePicker";
+import { IoMdCheckmark } from "react-icons/io";
 
 export interface InjuryFormData {
   factory: Factory;
@@ -22,7 +20,7 @@ export interface InjuryFormData {
 
 interface InjuryFormProps {
   onSubmit: (data: InjuryFormData) => void;
-  defaultData?: Factory;
+  defaultData?: InjuryFormData;
   edit?: boolean;
   onDelete?: () => void;
 }
@@ -34,7 +32,9 @@ function InjuryForm(props: InjuryFormProps) {
     watch,
     formState: { errors },
     control,
-  } = useForm<InjuryFormData>();
+  } = useForm<InjuryFormData>({
+    defaultValues: props.defaultData,
+  });
   const [factories, setFactories] = useState<Factory[]>([]);
   const [error, setError] = useState<string>();
 
@@ -70,20 +70,28 @@ function InjuryForm(props: InjuryFormProps) {
                 getOptionValue={(el) => el.id.toString()}
                 value={value}
                 onChange={onChange}
+                styles={{
+                  control: (base, state) => ({
+                    ...base,
+                    background: "var(--inputColor)",
+                    borderColor: "transparent",
+                    padding: "0.2rem 0.2rem",
+                    ":hover": { borderColor: "transparent" },
+                  }),
+                }}
               />
             )}
           />
         </div>
         <div className="flex flex-col mb-6">
           <label className="label mb-2">Data</label>
-          <DatePicker />
-          {/* <Controller
+          <Controller
             name="date"
             control={control}
             render={({ field: { value, onChange } }) => (
-              <Calendar onChange={onChange} value={value} className="mb-6" />
+              <DatePicker date={value} onChange={onChange} />
             )}
-          /> */}
+          />
         </div>
         <div className="flex flex-col mb-6">
           <label className="label mb-2">Description</label>
@@ -96,7 +104,16 @@ function InjuryForm(props: InjuryFormProps) {
           />
         </div>
         <button type="submit" className="btn w-full mt-8">
-          {props.edit ? <span>Modifica</span> : <span>Aggiungi</span>}
+          {props.edit ? (
+            <>
+              <span>Modifica</span>
+            </>
+          ) : (
+            <>
+              <IoMdCheckmark className="text-2xl mr-3" />
+              <span>Conferma</span>
+            </>
+          )}
         </button>
       </form>
     </main>
