@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -14,6 +16,10 @@ module.exports = {
         tileActive: "#E8E8F3",
         subTitle: "#77787C",
       },
+    },
+    screens: {
+      xs: "360px",
+      ...defaultTheme.screens,
     },
   },
   plugins: [],
