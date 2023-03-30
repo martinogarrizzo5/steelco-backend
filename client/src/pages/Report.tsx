@@ -20,12 +20,13 @@ import ErrorIndicator from "../components/ErrorIndicator";
 import Select from "react-select";
 import "chartjs-adapter-date-fns";
 import { it } from "date-fns/locale";
-import { fillMissingMonths, MonthlyReport } from "../utils/chart";
+import { fillMissingMonths } from "../utils/chart";
 import { IoMdAdd } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { shortenText } from "../utils/format";
 import IconButton from "../components/IconButton";
 import { DeleteInjuryPopup } from "../components/DeletePopup";
+import { MonthlyReport } from "../types";
 
 ChartJS.register(
   TimeScale,
@@ -72,10 +73,9 @@ function ReportScreen() {
   const handleReportFetch = async () => {
     try {
       setReportLoading(true);
-      const response = await axios.get<MonthlyFactoryReport[]>(
-        `/api/report/${id}`,
-        { params: { year: selectedYear.year } }
-      );
+      const response = await axios.get<MonthlyReport[]>(`/api/report/${id}`, {
+        params: { year: selectedYear.year },
+      });
       const data = response.data.map((el) => ({
         date: new Date(el.date),
         count: el.count,
@@ -264,11 +264,13 @@ function ReportScreen() {
             {injuries.map((injury) => (
               <div
                 key={`injury-${injury.id}`}
-                onClick={() => navigate(`/app/injury/${injury.id}`)}
                 className="flex items-center border-b-2 border-grayBorder 
                  hover:bg-tileHover active:bg-tileActive cursor-pointer"
               >
-                <div className="flex-1 py-4 px-4 sm:px-8" onClick={() => {}}>
+                <div
+                  className="flex-1 py-4 px-4 sm:px-8"
+                  onClick={() => navigate(`/app/injury/${injury.id}`)}
+                >
                   <h3 className="text-lg font-medium">
                     {shortenText(injury.description, 40)}
                   </h3>
