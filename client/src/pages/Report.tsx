@@ -285,7 +285,7 @@ function ReportScreen() {
                     className="text-2xl text-red-500 hover:bg-red-500 cursor-pointer mr-4 p-1.5"
                   />
                   <IconButton
-                    onClick={() => {}}
+                    onClick={() => navigate(`/app/injury/${injury.id}`)}
                     icon={FiEdit3}
                     className="text-2xl p-1.5"
                   />
