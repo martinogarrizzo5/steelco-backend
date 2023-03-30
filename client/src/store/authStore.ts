@@ -40,7 +40,7 @@ export const useAuth = create<IAuth>()(set => ({
       set({ user: response.data, isUserLoading: false, error: null });
     } catch (err) {
       const error = err as AxiosError;
-      const errorMessage = (error.response?.data as any).error;
+      const errorMessage = (error.response?.data as any).message;
 
       set({ user: null, isUserLoading: false, error: errorMessage });
       localStorage.removeItem("accessToken");
@@ -63,7 +63,7 @@ export const useAuth = create<IAuth>()(set => ({
       const error = err as AxiosError;
       const responseData = error.response?.data as any;
 
-      set({ isLogging: false, user: null });
+      set({ isLogging: false, user: null, error: responseData.message });
       snackBarStore.getState().show(responseData.message, SnackBarType.error);
     }
   },
