@@ -13,6 +13,7 @@ import DatePicker from "./DatePicker";
 import { IoMdCheckmark } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ClipLoader } from "react-spinners";
+import classNames from "classnames";
 
 export interface InjuryFormData {
   factory?: Factory;
@@ -25,7 +26,7 @@ interface InjuryFormProps {
   defaultData?: InjuryFormData;
   factoryOptions: Factory[];
   defaultFactoryId?: number;
-  edit?: boolean;
+  editForm?: boolean;
   onDelete?: () => void;
 }
 
@@ -46,9 +47,17 @@ function InjuryForm(props: InjuryFormProps) {
     );
   }, [props.defaultFactoryId, props.factoryOptions]);
 
+  const submitData = (data: InjuryFormData) => {
+    if (props.editForm && !formState.isDirty) {
+      return;
+    }
+
+    return props.onSubmit(data);
+  };
+
   return (
     <main className="max-w-xl mx-auto mb-4">
-      <form onSubmit={handleSubmit(props.onSubmit)}>
+      <form onSubmit={handleSubmit(submitData)}>
         <div className="flex flex-col mb-6">
           <label className="label mb-2">Stabilimento</label>
           <Controller
@@ -97,7 +106,7 @@ function InjuryForm(props: InjuryFormProps) {
           />
         </div>
         <div className="flex items-center w-full gap-8">
-          {props.edit && (
+          {props.editForm && (
             <button
               type="button"
               className="btn flex-1 btn--delete"
@@ -107,7 +116,13 @@ function InjuryForm(props: InjuryFormProps) {
               <span>Elimina</span>
             </button>
           )}
-          <button type="submit" className="btn flex-1">
+          <button
+            type="submit"
+            className={classNames(
+              "btn flex-1",
+              !formState.isDirty && props.editForm && "!btn--disabled"
+            )}
+          >
             {formState.isSubmitting ? (
               <ClipLoader size={24} color="white" />
             ) : (

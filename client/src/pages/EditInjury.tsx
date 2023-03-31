@@ -8,7 +8,6 @@ import ErrorIndicator from "../components/ErrorIndicator";
 import LoadingIndicator from "../components/LoadingIndicator";
 import { SnackBarType, useSnackBar } from "../store/snackBarStore";
 import { showSnackbarOnAxiosError } from "../utils/error";
-import { safeNumParse } from "../utils/format";
 
 function EditInjury() {
   const snackBar = useSnackBar();
@@ -80,7 +79,7 @@ function EditInjury() {
         defaultData={injury}
         factoryOptions={factories}
         defaultFactoryId={injury.factoryId}
-        edit
+        editForm
         onDelete={() => {}}
       />
     );
