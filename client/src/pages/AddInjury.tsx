@@ -38,7 +38,11 @@ function AddInjury() {
     if (!data.factory) return;
 
     try {
-      const res = await axios.post("/api/injury", data);
+      const dataToSend = {
+        ...data,
+        factoryId: data.factory.id,
+      };
+      const res = await axios.post("/api/injury", dataToSend);
       snackBar.show(res.data.message, SnackBarType.success);
       navigate(`/app/factory/${data.factory.id}/report`);
     } catch (err) {

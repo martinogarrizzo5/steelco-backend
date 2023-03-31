@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import PageTitle from "../components/PageTitle";
 import InjuryForm, { InjuryFormData } from "../components/InjuryForm";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Factory, Injury } from "@prisma/client";
 import axios, { AxiosError } from "axios";
 import ErrorIndicator from "../components/ErrorIndicator";
 import LoadingIndicator from "../components/LoadingIndicator";
 import { SnackBarType, useSnackBar } from "../store/snackBarStore";
 import { showSnackbarOnAxiosError } from "../utils/error";
+import { DeleteInjuryPopup } from "../components/DeletePopup";
 
 function EditInjury() {
   const snackBar = useSnackBar();
@@ -55,8 +56,7 @@ function EditInjury() {
   const submitEditedInjury = async (data: InjuryFormData) => {
     try {
       const dataToSend = {
-        date: data.date,
-        description: data.description,
+        ...data,
         factoryId: data.factory?.id,
       };
       const res = await axios.put(`/api/injury/${id}`, dataToSend);
@@ -66,6 +66,28 @@ function EditInjury() {
       console.log(err);
       showSnackbarOnAxiosError(err, snackBar);
     }
+  };
+
+  const handleInjuryDelete = async (injuryId: number) => {
+    if (!injury) return;
+
+    DeleteInjuryPopup.fire({
+      preConfirm: async () => {
+        try {
+          await axios.delete(`/api/injury/${injuryId}`);
+          snackBar.show(
+            "Infortunio eliminato con successo",
+            SnackBarType.success
+          );
+          navigate(`/app/factory/${injury.factoryId}/report`, {
+            replace: true,
+          });
+        } catch (err) {
+          console.log(err);
+          showSnackbarOnAxiosError(err, snackBar);
+        }
+      },
+    });
   };
 
   const pageContent = () => {
@@ -80,7 +102,7 @@ function EditInjury() {
         factoryOptions={factories}
         defaultFactoryId={injury.factoryId}
         editForm
-        onDelete={() => {}}
+        onDelete={() => handleInjuryDelete(injury.id)}
       />
     );
   };

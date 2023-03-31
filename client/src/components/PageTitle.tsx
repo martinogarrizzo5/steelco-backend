@@ -7,6 +7,7 @@ import IconButton from "./IconButton";
 interface PageTitleProps {
   title: string;
   canGoBack?: boolean;
+  customBackPath?: string;
   trailing?: ReactNode;
   className?: string;
 }
@@ -24,7 +25,11 @@ function PageTitle(props: PageTitleProps) {
       <div className="flex items-center">
         {props.canGoBack && (
           <IconButton
-            onClick={() => navigate(-1)}
+            onClick={() =>
+              props.customBackPath
+                ? navigate(props.customBackPath)
+                : navigate(-1)
+            }
             icon={IoIosArrowBack}
             className="p-1.5 sm:p-2 mr-2 text-3xl"
           />
