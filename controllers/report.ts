@@ -1,5 +1,5 @@
 import { query, RequestHandler } from "express";
-import prisma from "../prisma/db_connection";
+import prisma from "../db_connection";
 import asyncHandler from "../middlewares/asyncHandler";
 import * as validation from "../validation/report";
 import { Prisma } from "@prisma/client";

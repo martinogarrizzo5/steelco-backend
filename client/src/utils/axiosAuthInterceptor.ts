@@ -5,13 +5,15 @@ export function setupAuthRefreshInterceptor(
   onRefreshError: () => void
 ) {
   const interceptor = axios.interceptors.response.use(
-    response => response,
+    (response) => response,
     (error: AxiosError) => {
       console.log(error.config);
       // Reject promise if usual error
       if (error.response?.status !== 401) {
         return Promise.reject(error);
       }
+
+      console.log("errore");
 
       // Logout user and reject promise if refresh token is expired
       // "Token Expired" is an error returned by the server when the access token expired
@@ -28,7 +30,7 @@ export function setupAuthRefreshInterceptor(
 
       return axios
         .post("/auth/refresh", { accessToken: accessToken })
-        .then(response => {
+        .then((response) => {
           if (!error.response) return Promise.reject(error);
 
           localStorage.setItem("accessToken", response.data.accessToken);
@@ -40,10 +42,13 @@ export function setupAuthRefreshInterceptor(
           // Resolves the promise if successful
           return axios(error.response.config);
         })
-        .catch(refreshError => {
+        .catch((refreshError) => {
           // Retry failed, clean up and reject the promise
           localStorage.removeItem("accessToken");
-          onRefreshError();
+
+          if (refreshError.response?.status === 401) {
+            onRefreshError();
+          }
 
           return Promise.reject(refreshError);
         })

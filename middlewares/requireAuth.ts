@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import asyncHandler from "./asyncHandler";
-import prisma from "../prisma/db_connection";
+import prisma from "../db_connection";
 
 const isAuth: RequestHandler = asyncHandler(async (req, res, next) => {
   const bearerToken = req.get("Authorization");

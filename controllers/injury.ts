@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import prisma from "../prisma/db_connection";
+import prisma from "../db_connection";
 import * as validation from "../validation/injury";
 import asyncHandler from "../middlewares/asyncHandler";
 
@@ -25,15 +25,6 @@ export const getInjuries: RequestHandler = asyncHandler(async (req, res) => {
       factoryId: factoryId,
       date: { gte: firstYearDay, lte: lastYearDay },
     },
-    include: {
-      factory: {
-        select: {
-          name: true,
-          address: true,
-          id: true,
-        },
-      },
-    },
   });
 
   return res.json(injuries);
@@ -49,15 +40,6 @@ export const getInjurieById: RequestHandler = asyncHandler(async (req, res) => {
 
   const injurie = await prisma.injury.findUnique({
     where: { id: id },
-    include: {
-      factory: {
-        select: {
-          name: true,
-          address: true,
-          id: true,
-        },
-      },
-    },
   });
   if (!injurie) {
     return res.status(404).json({ message: "Infortunio non trovato" });
@@ -66,7 +48,7 @@ export const getInjurieById: RequestHandler = asyncHandler(async (req, res) => {
   return res.json(injurie);
 });
 
-export const addInjurie: RequestHandler = asyncHandler(async (req, res) => {
+export const addInjury: RequestHandler = asyncHandler(async (req, res) => {
   const result = validation.postBody.safeParse(req.body);
   if (!result.success) {
     return res.status(400).json({ message: "Valori inseriti invalidi" });

@@ -8,14 +8,20 @@ import ErrorIndicator from "../components/ErrorIndicator";
 import LoadingIndicator from "../components/LoadingIndicator";
 import { SnackBarType, useSnackBar } from "../store/snackBarStore";
 import { showSnackbarOnAxiosError } from "../utils/error";
-import { InjuryWithFactory } from "../types";
+import { safeNumParse } from "../utils/format";
 
 function EditInjury() {
   const snackBar = useSnackBar();
   const navigate = useNavigate();
   const { id } = useParams();
-  const [injury, setInjury] = React.useState<InjuryWithFactory>();
+  const [injury, setInjury] = React.useState<Injury>();
+  const [factories, setFactories] = React.useState<Factory[]>();
   const [error, setError] = React.useState<string>();
+
+  useEffect(() => {
+    handleInjuryFetch();
+    fetchFactories();
+  }, [id]);
 
   const handleInjuryFetch = async () => {
     try {
@@ -36,33 +42,48 @@ function EditInjury() {
     }
   };
 
-  useEffect(() => {
-    handleInjuryFetch();
-  }, [id]);
+  const fetchFactories = async () => {
+    try {
+      const response = await axios.get("/api/factory");
+      setFactories(response.data);
+    } catch (err) {
+      const error = err as AxiosError;
+      const errorMessage = (error.response?.data as any).message;
+      setError(errorMessage);
+    }
+  };
+
+  const submitEditedInjury = async (data: InjuryFormData) => {
+    try {
+      const dataToSend = {
+        date: data.date,
+        description: data.description,
+        factoryId: data.factory?.id,
+      };
+      const res = await axios.put(`/api/injury/${id}`, dataToSend);
+      snackBar.show(res.data.message, SnackBarType.success);
+      navigate(`/app/factory/${data.factory?.id}/report`, { replace: true });
+    } catch (err) {
+      console.log(err);
+      showSnackbarOnAxiosError(err, snackBar);
+    }
+  };
 
   const pageContent = () => {
     if (error) return <ErrorIndicator message={error} />;
-    if (!injury) return <LoadingIndicator className="mt-32 mx-auto w-max" />;
+    if (!injury || !factories)
+      return <LoadingIndicator className="mt-32 mx-auto w-max" />;
 
     return (
       <InjuryForm
         onSubmit={submitEditedInjury}
         defaultData={injury}
+        factoryOptions={factories}
+        defaultFactoryId={injury.factoryId}
         edit
         onDelete={() => {}}
       />
     );
-  };
-
-  const submitEditedInjury = async (data: InjuryFormData) => {
-    try {
-      const res = await axios.put(`/api/injury/${id}`, data);
-      snackBar.show(res.data.message, SnackBarType.success);
-      navigate("/app/injury", { replace: true });
-    } catch (err) {
-      console.log(err);
-      showSnackbarOnAxiosError(err, snackBar);
-    }
   };
 
   return (

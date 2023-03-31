@@ -248,7 +248,7 @@ function ReportScreen() {
       </div>
       <button
         className="btn w-full mt-16"
-        onClick={() => navigate("/app/injury/add")}
+        onClick={() => navigate(`/app/injury/add?factoryId=${factory.id}`)}
       >
         <IoMdAdd className="text-2xl mr-2" />
         <span>Nuovo Infortunio</span>

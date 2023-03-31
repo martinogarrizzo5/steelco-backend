@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import asyncHandler from "../middlewares/asyncHandler";
 import * as validation from "../validation/auth";
-import prisma from "../prisma/db_connection";
+import prisma from "../db_connection";
 import cookie from "cookie";
 
 export const login = asyncHandler(async (req, res, next) => {

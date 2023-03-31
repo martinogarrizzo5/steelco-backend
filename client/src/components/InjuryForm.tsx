@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import PageTitle from "../components/PageTitle";
@@ -11,47 +11,40 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import DatePicker from "./DatePicker";
 import { IoMdCheckmark } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { ClipLoader } from "react-spinners";
 
 export interface InjuryFormData {
-  factory: Factory;
-  date: Date;
-  description: string;
+  factory?: Factory;
+  date?: Date;
+  description?: string;
 }
 
 interface InjuryFormProps {
   onSubmit: (data: InjuryFormData) => void;
   defaultData?: InjuryFormData;
+  factoryOptions: Factory[];
+  defaultFactoryId?: number;
   edit?: boolean;
   onDelete?: () => void;
 }
 
 function InjuryForm(props: InjuryFormProps) {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    control,
-  } = useForm<InjuryFormData>({
-    defaultValues: props.defaultData,
-  });
-  const [factories, setFactories] = useState<Factory[]>([]);
+  const { register, handleSubmit, watch, formState, control, setValue } =
+    useForm<InjuryFormData>({
+      defaultValues: props.defaultData,
+    });
   const [error, setError] = useState<string>();
 
-  const fetchFactories = async () => {
-    try {
-      const response = await axios.get("/api/report");
-      setFactories(response.data);
-    } catch (err) {
-      const error = err as AxiosError;
-      const errorMessage = (error.response?.data as any).message;
-      setError(errorMessage);
-    }
-  };
+  useEffect(() => {
+    const factoryOptions = props.factoryOptions;
 
-  React.useEffect(() => {
-    fetchFactories();
-  }, []);
+    if (!factoryOptions) return;
+    setValue(
+      "factory",
+      factoryOptions.find((f) => f.id == props.defaultFactoryId)!
+    );
+  }, [props.defaultFactoryId, props.factoryOptions]);
 
   return (
     <main className="max-w-xl mx-auto mb-4">
@@ -65,7 +58,7 @@ function InjuryForm(props: InjuryFormProps) {
               <Select
                 placeholder={"Seleziona Stabilimento"}
                 isSearchable={false}
-                options={factories}
+                options={props.factoryOptions}
                 getOptionLabel={(el) => el.name}
                 getOptionValue={(el) => el.id.toString()}
                 value={value}
@@ -103,18 +96,28 @@ function InjuryForm(props: InjuryFormProps) {
             formRegister={register("description")}
           />
         </div>
-        <button type="submit" className="btn w-full mt-8">
-          {props.edit ? (
-            <>
-              <span>Modifica</span>
-            </>
-          ) : (
-            <>
-              <IoMdCheckmark className="text-2xl mr-3" />
-              <span>Conferma</span>
-            </>
+        <div className="flex items-center w-full gap-8">
+          {props.edit && (
+            <button
+              type="button"
+              className="btn flex-1 btn--delete"
+              onClick={props.onDelete}
+            >
+              <RiDeleteBin6Line className="text-2xl mr-3" />
+              <span>Elimina</span>
+            </button>
           )}
-        </button>
+          <button type="submit" className="btn flex-1">
+            {formState.isSubmitting ? (
+              <ClipLoader size={24} color="white" />
+            ) : (
+              <>
+                <IoMdCheckmark className="text-2xl mr-3" />
+                <span>Conferma</span>
+              </>
+            )}
+          </button>
+        </div>
       </form>
     </main>
   );

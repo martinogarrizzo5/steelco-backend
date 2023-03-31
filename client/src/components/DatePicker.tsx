@@ -36,7 +36,7 @@ function DatePicker(props: DatePickerProps) {
       </div>
       {isCalendarShown && (
         <Calendar
-          className="absolute xs:right-0 right-[-0.5rem] bottom-0 z-30 translate-y-[102%] shadow-lg"
+          className="absolute xs:right-0 right-[-0.5rem] bottom-0 z-30 translate-y-[102%] shadow-lg bg-zinc-50"
           onChange={(date) => {
             setCalendarShown(false);
             props.onChange(date);

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import asyncHandler from "../middlewares/asyncHandler";
-import prisma from "../prisma/db_connection";
+import prisma from "../db_connection";
 import * as validation from "../validation/factory";
 
 export const getFactories: RequestHandler = asyncHandler(async (req, res) => {
