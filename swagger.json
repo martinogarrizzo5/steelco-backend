@@ -1,0 +1,278 @@
+{
+  "openapi": "3.0.0",
+  "x-stoplight": { "id": "4yehegd87o5bn" },
+  "info":
+    {
+      "title": "Steelco Monitoring",
+      "version": "1.0",
+      "description": "API to monitor injuries in Steelco factories",
+      "contact":
+        {
+          "name": "martin",
+          "url": "martin-meneghetti.web.app",
+          "email": "martin.meneghetti@barsanti.edu.it",
+        },
+    },
+  "servers": [{ "url": "http://localhost:5000", "description": "Development" }],
+  "paths":
+    {
+      "/api/factory":
+        {
+          "get":
+            {
+              "summary": "Get factories",
+              "operationId": "get-api-factory",
+              "description": "Get all available factories",
+              "tags": ["Factory"],
+              "responses":
+                {
+                  "200":
+                    {
+                      "description": "OK",
+                      "content":
+                        {
+                          "application/json":
+                            {
+                              "schema":
+                                {
+                                  "type": "array",
+                                  "items":
+                                    { "$ref": "#/components/schemas/Factory" },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+          "post":
+            {
+              "summary": "Create factory",
+              "operationId": "post-api-factory",
+              "responses":
+                { "200": { "$ref": "#/components/responses/SuccessAction" } },
+              "security": [{ "access token": [] }],
+              "requestBody":
+                { "$ref": "#/components/requestBodies/CreateFactory" },
+              "parameters": [],
+              "tags": ["Factory"],
+              "description": "Create a new factory",
+            },
+        },
+      "/api/factory/{id}":
+        {
+          "parameters":
+            [
+              {
+                "schema": { "type": "integer" },
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "factory id",
+              },
+            ],
+          "get":
+            {
+              "summary": "Get factory",
+              "tags": ["Factory"],
+              "responses":
+                { "200": { "$ref": "#/components/responses/FactoryById" } },
+              "operationId": "get-api-factory-id",
+              "security": [{ "access token": [] }],
+              "description": "Get a factory by its id. Additional props like injuries count are added to the response",
+            },
+          "put":
+            {
+              "summary": "Update factory",
+              "operationId": "put-api-factory-id",
+              "responses":
+                { "200": { "$ref": "#/components/responses/SuccessAction" } },
+              "requestBody":
+                { "$ref": "#/components/requestBodies/UpdateFactory" },
+              "tags": ["Factory"],
+              "description": "Edit a factory using its id",
+            },
+          "delete":
+            {
+              "summary": "Delete factory",
+              "operationId": "delete-api-factory-id",
+              "responses":
+                { "200": { "$ref": "#/components/responses/SuccessAction" } },
+              "tags": ["Factory"],
+              "description": "Delete a factory by its id",
+            },
+        },
+    },
+  "components":
+    {
+      "schemas":
+        {
+          "User":
+            {
+              "title": "User",
+              "type": "object",
+              "x-examples":
+                {
+                  "Alice Smith":
+                    {
+                      "id": 142,
+                      "firstName": "Alice",
+                      "lastName": "Smith",
+                      "email": "alice.smith@gmail.com",
+                      "dateOfBirth": "1997-10-31",
+                      "emailVerified": true,
+                      "signUpDate": "2019-08-24",
+                    },
+                },
+              "properties":
+                {
+                  "id":
+                    {
+                      "type": "integer",
+                      "description": "Unique identifier for the given user.",
+                    },
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "createdAt":
+                    {
+                      "type": "string",
+                      "format": "date",
+                      "description": "The date that the user was created.",
+                    },
+                  "updatedAt": { "type": "string", "format": "date" },
+                },
+            },
+          "Factory":
+            {
+              "title": "Factory",
+              "x-stoplight": { "id": "mn6agam3pd6dl" },
+              "type": "object",
+              "properties":
+                {
+                  "id": { "type": "integer" },
+                  "name": { "type": "string" },
+                  "address": { "type": "string" },
+                  "createdAt": { "type": "string", "format": "date" },
+                  "updatedAt": { "type": "string", "format": "date" },
+                },
+            },
+          "Injury":
+            {
+              "type": "object",
+              "x-examples":
+                {
+                  "Example 1":
+                    {
+                      "id": 12,
+                      "date": "2023-03-06T23:00:00.000Z",
+                      "description": "Trauma Cranico",
+                      "factoryId": 2,
+                      "createdAt": "2023-03-23T08:50:40.777Z",
+                      "updatedAt": "2023-03-31T10:51:42.826Z",
+                    },
+                },
+              "properties":
+                {
+                  "id": { "type": "integer" },
+                  "date": { "type": "string" },
+                  "description": { "type": "string" },
+                  "factoryId": { "type": "integer" },
+                  "createdAt": { "type": "string", "format": "date" },
+                  "updatedAt": { "type": "string", "format": "date" },
+                },
+            },
+        },
+      "securitySchemes":
+        {
+          "access token":
+            { "type": "http", "scheme": "bearer", "description": "" },
+        },
+      "requestBodies":
+        {
+          "CreateFactory":
+            {
+              "content":
+                {
+                  "application/json":
+                    {
+                      "schema":
+                        {
+                          "type": "object",
+                          "properties":
+                            {
+                              "address": { "type": "string" },
+                              "name": { "type": "string" },
+                            },
+                          "required": ["address", "name"],
+                        },
+                    },
+                },
+            },
+          "UpdateFactory":
+            {
+              "content":
+                {
+                  "application/json":
+                    {
+                      "schema":
+                        {
+                          "type": "object",
+                          "properties":
+                            {
+                              "address": { "type": "string" },
+                              "name": { "type": "string" },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+      "responses":
+        {
+          "SuccessAction":
+            {
+              "description": "Example response",
+              "content":
+                {
+                  "application/json":
+                    {
+                      "schema":
+                        {
+                          "type": "object",
+                          "properties": { "message": { "type": "string" } },
+                        },
+                    },
+                },
+            },
+          "FactoryById":
+            {
+              "description": "Example response",
+              "content":
+                {
+                  "application/json":
+                    {
+                      "schema":
+                        {
+                          "allOf":
+                            [
+                              { "$ref": "#/components/schemas/Factory" },
+                              {
+                                "type": "object",
+                                "properties":
+                                  {
+                                    "_count":
+                                      {
+                                        "type": "object",
+                                        "properties":
+                                          { "injuries": { "type": "integer" } },
+                                      },
+                                  },
+                              },
+                            ],
+                        },
+                    },
+                },
+            },
+        },
+    },
+  "tags": [{ "name": "Auth" }, { "name": "Factory" }, { "name": "Injury" }],
+}

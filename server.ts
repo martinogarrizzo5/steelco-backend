@@ -6,7 +6,6 @@ import injuryRoutes from "./routes/injury";
 import factoryRoutes from "./routes/factory";
 import reportRoutes from "./routes/report";
 import authRoutes from "./routes/auth";
-import prisma from "./db_connection";
 import helmet from "helmet";
 import cors from "cors";
 import errorHandler from "./middlewares/errorHandler";
