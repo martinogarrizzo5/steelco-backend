@@ -6,6 +6,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Input from "./Input";
 import axios from "axios";
+import classNames from "classnames";
 
 export interface FactoryFormData {
   name: string;
@@ -25,6 +26,10 @@ function FactoryForm(props: FactoryFormProps) {
   });
 
   const onSubmit = async (data: FactoryFormData) => {
+    if (props.editForm && !formState.isDirty) {
+      return;
+    }
+
     if (props.onSubmit) {
       await props.onSubmit(data);
     }
@@ -69,7 +74,13 @@ function FactoryForm(props: FactoryFormProps) {
             <span>Elimina</span>
           </button>
         )}
-        <button type="submit" className="btn flex-1">
+        <button
+          type="submit"
+          className={classNames(
+            "btn flex-1",
+            !formState.isDirty && props.editForm && "!btn--disabled"
+          )}
+        >
           {formState.isSubmitting ? (
             <ClipLoader size={24} color="white" />
           ) : (
