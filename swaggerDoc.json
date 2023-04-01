@@ -8,7 +8,7 @@
     "version": "1.0",
     "description": "API to monitor injuries in Steelco factories",
     "contact": {
-      "name": "martin",
+      "name": "martin meneghetti",
       "url": "martin-meneghetti.web.app",
       "email": "martin.meneghetti@barsanti.edu.it"
     }
@@ -147,7 +147,7 @@
     },
     "/api/injury": {
       "get": {
-        "summary": "Get injuries by year or factory, or all",
+        "summary": "Get injuries and filter them by factory or year",
         "tags": [
           "Injury"
         ],
@@ -217,18 +217,22 @@
             "access token": []
           }
         ],
-        "description": "Create a new injury"
+        "description": "Create a new injury",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateInjury"
+        }
       }
     },
     "/api/injury/{id}": {
       "parameters": [
         {
           "schema": {
-            "type": "string"
+            "type": "integer"
           },
           "name": "id",
           "in": "path",
-          "required": true
+          "required": true,
+          "description": "injury id"
         }
       ],
       "get": {
@@ -238,7 +242,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/FactoryById"
+            "$ref": "#/components/responses/InjuryById"
           }
         },
         "operationId": "get-api-injury-id",
@@ -259,7 +263,10 @@
         ],
         "tags": [
           "Injury"
-        ]
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateInjury"
+        }
       },
       "delete": {
         "summary": "Delete injury",
@@ -277,6 +284,184 @@
         "tags": [
           "Injury"
         ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login with username and password",
+        "operationId": "post-auth-login",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/LoginSuccessful"
+          }
+        },
+        "description": "Login and get an access token (in the response) and a refresh token (in the http-only cookies)",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Login"
+        }
+      }
+    },
+    "/auth/user": {
+      "get": {
+        "summary": "Get user related to the access token",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "username": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "message": "Accesso consentito",
+                      "user": {
+                        "id": 1,
+                        "username": "martin"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-auth-user",
+        "description": "",
+        "security": [
+          {
+            "access token": []
+          }
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout and remove auth cookies",
+        "operationId": "post-auth-logout",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          }
+        },
+        "tags": [
+          "Auth"
+        ],
+        "description": "remove the refresh cookie if present"
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Get new access token",
+        "operationId": "post-auth-refresh",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RefreshSuccess"
+          }
+        },
+        "tags": [
+          "Auth"
+        ],
+        "description": "To get a new access token is required to have a valid refresh token in the cookies",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "accessToken": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "accessToken"
+                ]
+              },
+              "examples": {
+                "Example 1": {
+                  "value": {
+                    "accessToken": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/report": {
+      "get": {
+        "summary": "Get a general overview of injuries in Steelco",
+        "tags": [
+          "Report"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GeneralReport"
+          }
+        },
+        "operationId": "get-report",
+        "description": "Get list of factories with the last injury date"
+      },
+      "parameters": []
+    },
+    "/api/report/{factoryId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "factoryId",
+          "in": "path",
+          "required": true,
+          "description": "factory id"
+        }
+      ],
+      "get": {
+        "summary": "Get history of injuries for the provided factory",
+        "tags": [
+          "Report"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FactoryHistory"
+          }
+        },
+        "operationId": "get-report-factoryId",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "year",
+            "description": "filter by year"
+          }
+        ],
+        "description": "Get monthly history of injuries"
       }
     }
   },
@@ -449,6 +634,87 @@
             }
           }
         }
+      },
+      "CreateInjury": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "factoryId": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "date",
+                "description",
+                "factoryId"
+              ]
+            },
+            "examples": {
+              "Example 1": {
+                "value": {
+                  "date": "2019-08-24T14:15:22Z",
+                  "description": "Nuovo infortunio",
+                  "factoryId": 4
+                }
+              }
+            }
+          }
+        }
+      },
+      "UpdateInjury": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "factoryId": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Login": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            },
+            "examples": {
+              "Example 1": {
+                "value": {
+                  "username": "martin",
+                  "password": "password"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "responses": {
@@ -607,6 +873,227 @@
             }
           }
         }
+      },
+      "FactoryHistory": {
+        "description": "Example response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "x-examples": {
+                "Example 1": [
+                  {
+                    "date": "1995-06-01T00:00:00.000Z",
+                    "count": 1
+                  },
+                  {
+                    "date": "2000-01-01T00:00:00.000Z",
+                    "count": 1
+                  },
+                  {
+                    "date": "2004-02-01T00:00:00.000Z",
+                    "count": 1
+                  },
+                  {
+                    "date": "2004-03-01T00:00:00.000Z",
+                    "count": 1
+                  },
+                  {
+                    "date": "2004-04-01T00:00:00.000Z",
+                    "count": 1
+                  },
+                  {
+                    "date": "2012-12-01T00:00:00.000Z",
+                    "count": 1
+                  },
+                  {
+                    "date": "2020-09-01T00:00:00.000Z",
+                    "count": 1
+                  },
+                  {
+                    "date": "2023-01-01T00:00:00.000Z",
+                    "count": 2
+                  },
+                  {
+                    "date": "2023-03-01T00:00:00.000Z",
+                    "count": 1
+                  },
+                  {
+                    "date": "2023-06-01T00:00:00.000Z",
+                    "count": 1
+                  }
+                ]
+              },
+              "items": {
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "count": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "examples": {
+              "Example 1": {
+                "value": [
+                  {
+                    "date": "2019-08-24T14:15:22Z",
+                    "count": 0
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "GeneralReport": {
+        "description": "Example response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "x-examples": {
+                "Example 1": [
+                  {
+                    "id": 2,
+                    "name": "Academy",
+                    "address": "Via del Lavoro 41",
+                    "lastInjuryDate": "2023-06-06T22:00:00.000Z"
+                  },
+                  {
+                    "id": 13,
+                    "name": "Centro Gestione",
+                    "address": "Via PassoAlto 12",
+                    "lastInjuryDate": null
+                  },
+                  {
+                    "id": 12,
+                    "name": "Fabbrica Test 3",
+                    "address": "Via Quartiere 18/B",
+                    "lastInjuryDate": null
+                  },
+                  {
+                    "id": 5,
+                    "name": "Officina",
+                    "address": "Via del Lavoro 12",
+                    "lastInjuryDate": null
+                  },
+                  {
+                    "id": 18,
+                    "name": "Pharma",
+                    "address": "Via del Lavoro 10",
+                    "lastInjuryDate": null
+                  },
+                  {
+                    "id": 17,
+                    "name": "Sede",
+                    "address": "Via Balegante 28",
+                    "lastInjuryDate": null
+                  }
+                ]
+              },
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "lastInjuryDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "nullable": true
+                  }
+                }
+              }
+            },
+            "examples": {
+              "Example 1": {
+                "value": [
+                  {
+                    "id": 2,
+                    "name": "Academy",
+                    "address": "Via del Lavoro 41",
+                    "lastInjuryDate": "2023-06-06T22:00:00.000Z"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "LoginSuccessful": {
+        "description": "Example response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "token": {
+                  "type": "string"
+                }
+              },
+              "x-examples": {
+                "Example 1": {
+                  "message": "Accesso consentito",
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MDM1ODY4MCwiZXhwIjoxNjgwMzU5NTgwfQ.oCWOUBkW-uSHsNVw9XF8n1um2g0gv3JvklmW989GY8I"
+                }
+              }
+            },
+            "examples": {
+              "Example 1": {
+                "value": {
+                  "message": "Accesso consentito",
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MDM1ODY4MCwiZXhwIjoxNjgwMzU5NTgwfQ.oCWOUBkW-uSHsNVw9XF8n1um2g0gv3JvklmW989GY8I"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RefreshSuccess": {
+        "description": "Example response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "accessToken": {
+                  "type": "string"
+                }
+              },
+              "x-examples": {
+                "Example 1": {
+                  "message": "Accesso consentito",
+                  "accessToken": "some"
+                }
+              }
+            },
+            "examples": {
+              "Example 1": {
+                "value": {
+                  "message": "Accesso consentito",
+                  "accessToken": "someToken"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -619,6 +1106,9 @@
     },
     {
       "name": "Injury"
+    },
+    {
+      "name": "Report"
     }
   ]
 }

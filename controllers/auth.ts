@@ -60,12 +60,14 @@ export const getUser: RequestHandler = asyncHandler(async (req, res) => {
 
 export const refreshToken: RequestHandler = asyncHandler(async (req, res) => {
   const result = validation.refreshBody.safeParse(req.body);
-  if (!result.success) {
+  const oldRefreshToken = req.cookies.refreshToken;
+  if (!result.success || !oldRefreshToken) {
     return res.status(401).json({ message: "Token mancanti" });
   }
 
   const { accessToken } = result.data;
-  const { refreshToken } = cookie.parse(req.cookies.refreshToken);
+
+  const { refreshToken } = cookie.parse(oldRefreshToken);
 
   let payload: any = null;
   try {

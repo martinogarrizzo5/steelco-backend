@@ -7,7 +7,7 @@
     "server": "nodemon server.ts",
     "buildServer": "npx tsc",
     "client": "cd client && npm run dev",
-    "buildClient": "cd client && npm run build && rm -d -r ../build/client; mv -f ./dist/ ../build/client",
+    "buildClient": "cd client && npm run build",
     "dev": "concurrently \"npm run server\" \"npm run client\" ",
     "build": "npm run buildServer && npm run buildClient",
     "start": "node ./build/server.js",
