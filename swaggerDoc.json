@@ -166,12 +166,12 @@
                   "Example 1": {
                     "value": [
                       {
-                        "id": 0,
-                        "date": "string",
-                        "description": "string",
-                        "factoryId": 0,
-                        "createdAt": "2019-08-24",
-                        "updatedAt": "2019-08-24"
+                        "id": 15,
+                        "date": "1995-06-10T00:00:00.000Z",
+                        "description": "Arm dislocation",
+                        "factoryId": 2,
+                        "createdAt": "2023-03-23T09:01:46.920Z",
+                        "updatedAt": "2023-03-23T09:00:07.642Z"
                       }
                     ]
                   }
@@ -198,7 +198,8 @@
             "name": "year",
             "description": "filter by year"
           }
-        ]
+        ],
+        "description": "Search injuries by factory or by year"
       },
       "post": {
         "summary": "Create injury record",
@@ -217,6 +218,65 @@
           }
         ],
         "description": "Create a new injury"
+      }
+    },
+    "/api/injury/{id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get injury by id",
+        "tags": [
+          "Injury"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FactoryById"
+          }
+        },
+        "operationId": "get-api-injury-id",
+        "description": ""
+      },
+      "put": {
+        "summary": "Update injury data",
+        "operationId": "put-api-injury-id",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          }
+        },
+        "security": [
+          {
+            "access token": []
+          }
+        ],
+        "tags": [
+          "Injury"
+        ]
+      },
+      "delete": {
+        "summary": "Delete injury",
+        "operationId": "delete-api-injury-id",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          }
+        },
+        "security": [
+          {
+            "access token": []
+          }
+        ],
+        "tags": [
+          "Injury"
+        ]
       }
     }
   },
@@ -308,7 +368,8 @@
             "type": "integer"
           },
           "date": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           },
           "description": {
             "type": "string"
@@ -318,11 +379,11 @@
           },
           "createdAt": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           }
         }
       }
@@ -486,6 +547,61 @@
               "properties": {
                 "message": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "InjuryById": {
+        "description": "Example response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Injury"
+            },
+            "examples": {
+              "Example 1": {
+                "value": {
+                  "id": 15,
+                  "date": "1995-06-10T00:00:00.000Z",
+                  "description": "Arm dislocation",
+                  "factoryId": 2,
+                  "createdAt": "2023-03-23T09:01:46.920Z",
+                  "updatedAt": "2023-03-23T09:00:07.642Z"
+                }
+              }
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/Injury"
+            }
+          }
+        }
+      },
+      "404Error": {
+        "description": "Example response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "examples": {
+              "Example 1": {
+                "value": {
+                  "message": "Elemento non trovato"
                 }
               }
             }
